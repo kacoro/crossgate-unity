@@ -1,0 +1,535 @@
+{
+    "columns": 0,
+    "grid": {
+        "height": 1,
+        "orientation": "orthogonal",
+        "width": 1
+    },
+    "margin": 0,
+    "name": "1530_tile",
+    "spacing": 0,
+    "tilecount": 86,
+    "tiledversion": "1.2.2",
+    "tileheight": 47,
+    "tiles": [
+        {
+            "id": 0,
+            "image": "tile/1215_palet_08.cgp_6796.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 1,
+            "image": "tile/1216_palet_08.cgp_6797.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 2,
+            "image": "tile/1217_palet_08.cgp_6798.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 3,
+            "image": "tile/1218_palet_08.cgp_6799.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 4,
+            "image": "tile/1219_palet_08.cgp_6800.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 5,
+            "image": "tile/1220_palet_08.cgp_6801.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 6,
+            "image": "tile/1221_palet_08.cgp_6802.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 7,
+            "image": "tile/1222_palet_08.cgp_6803.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 8,
+            "image": "tile/1223_palet_08.cgp_6804.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 9,
+            "image": "tile/1224_palet_08.cgp_6805.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 10,
+            "image": "tile/1225_palet_08.cgp_6806.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 11,
+            "image": "tile/1226_palet_08.cgp_6807.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 12,
+            "image": "tile/1227_palet_08.cgp_6808.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 13,
+            "image": "tile/1228_palet_08.cgp_6809.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 14,
+            "image": "tile/1229_palet_08.cgp_6810.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 15,
+            "image": "tile/1230_palet_08.cgp_6811.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 16,
+            "image": "tile/1231_palet_08.cgp_6812.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 17,
+            "image": "tile/1232_palet_08.cgp_6813.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 18,
+            "image": "tile/1233_palet_08.cgp_6814.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 19,
+            "image": "tile/1234_palet_08.cgp_6815.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 20,
+            "image": "tile/1235_palet_08.cgp_6816.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 21,
+            "image": "tile/1236_palet_08.cgp_6817.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 22,
+            "image": "tile/1237_palet_08.cgp_6818.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 23,
+            "image": "tile/1238_palet_08.cgp_6819.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 24,
+            "image": "tile/1239_palet_08.cgp_6820.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 25,
+            "image": "tile/1240_palet_08.cgp_6821.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 26,
+            "image": "tile/1241_palet_08.cgp_6822.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 27,
+            "image": "tile/1242_palet_08.cgp_6823.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 28,
+            "image": "tile/1243_palet_08.cgp_6824.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 29,
+            "image": "tile/1244_palet_08.cgp_6825.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 30,
+            "image": "tile/1245_palet_08.cgp_6826.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 31,
+            "image": "tile/1246_palet_08.cgp_6827.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 32,
+            "image": "tile/1247_palet_08.cgp_6828.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 33,
+            "image": "tile/1248_palet_08.cgp_6829.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 34,
+            "image": "tile/1249_palet_08.cgp_6830.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 35,
+            "image": "tile/1250_palet_08.cgp_6831.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 36,
+            "image": "tile/1251_palet_08.cgp_6832.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 37,
+            "image": "tile/1252_palet_08.cgp_6833.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 38,
+            "image": "tile/1253_palet_08.cgp_6834.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 39,
+            "image": "tile/1254_palet_08.cgp_6835.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 40,
+            "image": "tile/1255_palet_08.cgp_6836.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 41,
+            "image": "tile/1256_palet_08.cgp_6837.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 42,
+            "image": "tile/1257_palet_08.cgp_6838.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 43,
+            "image": "tile/1258_palet_08.cgp_6839.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 44,
+            "image": "tile/1259_palet_08.cgp_6840.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 45,
+            "image": "tile/1260_palet_08.cgp_6841.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 46,
+            "image": "tile/1261_palet_08.cgp_6842.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 47,
+            "image": "tile/1262_palet_08.cgp_6843.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 48,
+            "image": "tile/1263_palet_08.cgp_6844.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 49,
+            "image": "tile/1264_palet_08.cgp_6845.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 50,
+            "image": "tile/1265_palet_08.cgp_6846.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 51,
+            "image": "tile/1266_palet_08.cgp_6847.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 52,
+            "image": "tile/1267_palet_08.cgp_6848.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 53,
+            "image": "tile/1268_palet_08.cgp_6849.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 54,
+            "image": "tile/1269_palet_08.cgp_6850.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 55,
+            "image": "tile/1270_palet_08.cgp_6851.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 56,
+            "image": "tile/1271_palet_08.cgp_6852.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 57,
+            "image": "tile/1272_palet_08.cgp_6853.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 58,
+            "image": "tile/1273_palet_08.cgp_6854.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 59,
+            "image": "tile/1274_palet_08.cgp_6855.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 60,
+            "image": "tile/1275_palet_08.cgp_6856.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 61,
+            "image": "tile/1276_palet_08.cgp_6857.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 62,
+            "image": "tile/1277_palet_08.cgp_6858.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 63,
+            "image": "tile/1278_palet_08.cgp_6859.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 64,
+            "image": "tile/1279_palet_08.cgp_6860.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 65,
+            "image": "tile/1280_palet_08.cgp_6861.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 66,
+            "image": "tile/1281_palet_08.cgp_6862.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 67,
+            "image": "tile/4042_palet_08.cgp_6530.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 68,
+            "image": "tile/4043_palet_08.cgp_6531.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 69,
+            "image": "tile/4044_palet_08.cgp_6532.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 70,
+            "image": "tile/4045_palet_08.cgp_6533.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 71,
+            "image": "tile/4046_palet_08.cgp_6534.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 72,
+            "image": "tile/4047_palet_08.cgp_6535.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 73,
+            "image": "tile/4049_palet_08.cgp_6537.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 74,
+            "image": "tile/4050_palet_08.cgp_6538.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 75,
+            "image": "tile/4051_palet_08.cgp_6539.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 76,
+            "image": "tile/4052_palet_08.cgp_6540.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 77,
+            "image": "tile/4053_palet_08.cgp_6541.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 78,
+            "image": "tile/4054_palet_08.cgp_6542.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 79,
+            "image": "tile/4055_palet_08.cgp_6543.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 80,
+            "image": "tile/4056_palet_08.cgp_6544.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 81,
+            "image": "tile/4057_palet_08.cgp_6545.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 82,
+            "image": "tile/4058_palet_08.cgp_6546.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 83,
+            "image": "tile/4059_palet_08.cgp_6547.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 84,
+            "image": "tile/4060_palet_08.cgp_6548.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        },
+        {
+            "id": 85,
+            "image": "tile/4063_palet_08.cgp_6551.png",
+            "imageheight": 47,
+            "imagewidth": 64
+        }
+    ],
+    "tilewidth": 64,
+    "type": "tileset",
+    "version": 1.2
+}
