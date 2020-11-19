@@ -10,7 +10,8 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        // target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        target = PlayerController.instance.transform;
     }
 
     // Update is called once per frame
