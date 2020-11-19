@@ -11,8 +11,10 @@ public class Exit : MonoBehaviour
     {
         if (other.tag == "Player") {
             PlayerController.instance.scenePassword = newScenePassword;
-            Debug.Log(newScenePassword);
-            SceneManager.LoadScene(sceneName);
+           
+            //SceneManager.LoadScene(sceneName);
+
+            FindObjectOfType<SceneFader>().FadeTo(sceneName);
         }
     }
 }
