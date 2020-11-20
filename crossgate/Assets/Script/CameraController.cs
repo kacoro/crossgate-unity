@@ -5,13 +5,23 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Transform target;
-
+    public GameObject playerPrefab;
+    public Entrance entrance;
     [SerializeField] private float smoothSpeed;
     // Start is called before the first frame update
+
+    private void Awake() {
+       
+        
+    }
+
     private void Start()
     {
         // target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        
         target = PlayerController.instance.transform;
+      
+        
     }
 
     // Update is called once per frame

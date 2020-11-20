@@ -6,11 +6,14 @@ public class Entrance : MonoBehaviour
 {
    public string entrancePassword;
    private void Start() {
-       if(PlayerController.instance.scenePassword == entrancePassword){
-           PlayerController.instance.transform.position = transform.position;
-           Debug.Log("Enter!");
-       }else{
-           Debug.Log("Wrong!");
+       if(PlayerController.instance){
+        if(PlayerController.instance.scenePassword == entrancePassword){
+            PlayerController.instance.transform.position = transform.position;
+            Debug.Log("Enter!");
+        }else{
+            Debug.Log("Wrong!");
+        }
        }
+       
    }
 }
