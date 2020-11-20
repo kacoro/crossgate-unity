@@ -22,6 +22,16 @@ public class BattleSystem : MonoBehaviour
     public BattleHub playerHUD;
     public BattleHub enemyHUD;
 
+    
+    private PlayerInputActions controls;
+    private Vector2 move;
+
+    private void Awake() {
+        controls = new PlayerInputActions();
+        controls.GamePlay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+        controls.GamePlay.Move.canceled  += ctx => move = Vector2.zero;
+        controls.GamePlay.Ok.started +=ctx => OnAttackButton();
+    }
     void Start()
     {
         state = BattleState.START;
@@ -31,10 +41,18 @@ public class BattleSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(state == BattleState.PLAYERTURN){
+           
+        }
     }
     
+     private void OnEnable() {
+        controls.GamePlay.Enable();
+    }
 
+     private void OnDisable() {
+         controls.GamePlay.Disable();
+     }
 
     IEnumerator SetupBattle()
     {

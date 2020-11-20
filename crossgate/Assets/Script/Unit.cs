@@ -14,7 +14,7 @@ public class Unit : MonoBehaviour
         currentHp -= dmg;
 
         if(currentHp <=0){
-            currentHp = 0;
+         
             return true;
         }else
             return false;
