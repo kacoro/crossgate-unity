@@ -73,6 +73,22 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""677bcead-18cc-4c1a-82e8-771ecd3ec8cb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""67cd35fa-4541-41e3-8e6c-9e49766efd07"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -394,6 +410,28 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""action"": ""MouseDrag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b59e76e-357a-47e2-b9de-0c90deb2e0f4"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf495c6f-5742-4ac3-9eb7-97604ec0560d"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -420,6 +458,8 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_GamePlay_MouseDwon = m_GamePlay.FindAction("MouseDwon", throwIfNotFound: true);
         m_GamePlay_MouseUp = m_GamePlay.FindAction("MouseUp", throwIfNotFound: true);
         m_GamePlay_MouseDrag = m_GamePlay.FindAction("MouseDrag", throwIfNotFound: true);
+        m_GamePlay_Submit = m_GamePlay.FindAction("Submit", throwIfNotFound: true);
+        m_GamePlay_Newaction = m_GamePlay.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -476,6 +516,8 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_MouseDwon;
     private readonly InputAction m_GamePlay_MouseUp;
     private readonly InputAction m_GamePlay_MouseDrag;
+    private readonly InputAction m_GamePlay_Submit;
+    private readonly InputAction m_GamePlay_Newaction;
     public struct GamePlayActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -487,6 +529,8 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @MouseDwon => m_Wrapper.m_GamePlay_MouseDwon;
         public InputAction @MouseUp => m_Wrapper.m_GamePlay_MouseUp;
         public InputAction @MouseDrag => m_Wrapper.m_GamePlay_MouseDrag;
+        public InputAction @Submit => m_Wrapper.m_GamePlay_Submit;
+        public InputAction @Newaction => m_Wrapper.m_GamePlay_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -517,6 +561,12 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @MouseDrag.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDrag;
                 @MouseDrag.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDrag;
                 @MouseDrag.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDrag;
+                @Submit.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
+                @Submit.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
+                @Submit.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
+                @Newaction.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
+                @Newaction.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
+                @Newaction.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -542,6 +592,12 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @MouseDrag.started += instance.OnMouseDrag;
                 @MouseDrag.performed += instance.OnMouseDrag;
                 @MouseDrag.canceled += instance.OnMouseDrag;
+                @Submit.started += instance.OnSubmit;
+                @Submit.performed += instance.OnSubmit;
+                @Submit.canceled += instance.OnSubmit;
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
             }
         }
     }
@@ -573,5 +629,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnMouseDwon(InputAction.CallbackContext context);
         void OnMouseUp(InputAction.CallbackContext context);
         void OnMouseDrag(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }
