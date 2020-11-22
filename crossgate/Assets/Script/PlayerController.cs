@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +16,11 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInputActions controls;
     private Vector2 move;
+
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        Debug.Log("Fire!");
+    }
 
     private void Awake() {
         controls = new PlayerInputActions();

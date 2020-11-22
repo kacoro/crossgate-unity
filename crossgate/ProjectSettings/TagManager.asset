@@ -14,8 +14,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Player
+  - Trigger
   - 
   - 
   - 
@@ -41,4 +41,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: NpcLayer
+    uniqueID: 3289013271
+    locked: 0
+  - name: PlayerLayer
+    uniqueID: 2280170937
     locked: 0
