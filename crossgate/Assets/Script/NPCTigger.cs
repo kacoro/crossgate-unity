@@ -17,7 +17,7 @@ public class NPCTigger : MonoBehaviour
     private PlayerInputActions controls;
 
     private void Awake() {
-            controls = new PlayerInputActions();
+          controls = new PlayerInputActions();
           controls.GamePlay.Ok.started += ctx => ShowDialog();
     }
 

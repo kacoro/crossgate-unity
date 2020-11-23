@@ -11,7 +11,6 @@ public class PauseMenu : MonoBehaviour
 
     private void Awake() {
          controls = new PlayerInputActions();
-
          controls.GamePlay.Start.started += ctx => Pause();
     }
      private void OnEnable() {
