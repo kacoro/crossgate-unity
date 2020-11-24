@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Ember
   description: 
-  type: 9
+  type: 1
   power: 20
   accuracy: 10
   pp: 3

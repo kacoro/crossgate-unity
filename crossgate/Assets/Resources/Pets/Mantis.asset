@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Mantis
   description: 
   sprite: {fileID: 21300000, guid: 351e32dd0f191e445ae00ec20fff9c57, type: 3}
-  Type: 5
+  type: 3
   maxHp: 0
   attack: 49
   defense: 49

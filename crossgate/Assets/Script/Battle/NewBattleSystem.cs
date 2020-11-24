@@ -95,11 +95,18 @@ public class NewBattleSystem : MonoBehaviour
         state = NewBattleState.Busy;
         var palyerMove = playerUnit.Pet.Moves[currentMove];
         yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {palyerMove.Base.Name}");
+
+        playerUnit.PlayAttackAnimation();
+         yield return new WaitForSeconds(1f);
+
+        EnemyUnit.PlayHitAnimation();
+
         var damageDetails = EnemyUnit.Pet.TakeDamage(palyerMove,playerUnit.Pet);
         yield return EnemyHud.UpdateHP();
         yield return ShowDamageDetails(damageDetails);
         if(damageDetails.Fainted){
             yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} Fainted");
+            EnemyUnit.PlayFaintAnimation();
         }else{
             StartCoroutine(enemyMove());
         }
@@ -109,11 +116,18 @@ public class NewBattleSystem : MonoBehaviour
           state = NewBattleState.EnemyMove;
           var randomMove = EnemyUnit.Pet.GetRandomMove();
             yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
+
+            EnemyUnit.PlayAttackAnimation();
+            yield return new WaitForSeconds(1f);
+
+            playerUnit.PlayHitAnimation();
+
             var damageDetails = playerUnit.Pet.TakeDamage(randomMove,EnemyUnit.Pet);
             yield return playerHud.UpdateHP();
             yield return ShowDamageDetails(damageDetails);
             if(damageDetails.Fainted){
                 yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
+                playerUnit.PlayFaintAnimation();
             }else{
                PlayerAction();
             }

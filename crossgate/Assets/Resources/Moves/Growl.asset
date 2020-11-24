@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Growl
   description: 
-  type: 7
+  type: 2
   power: 20
   accuracy: 5
   pp: 6

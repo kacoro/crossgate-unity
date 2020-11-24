@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Little gargoyle
   description: 
   sprite: {fileID: 21300000, guid: a0bbcad701072c144947c12f2417da90, type: 3}
-  Type: 9
+  type: 2
   maxHp: 0
   attack: 52
   defense: 43

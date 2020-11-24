@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Scratch
   description: 
-  type: 1
+  type: 3
   power: 20
   accuracy: 10
   pp: 10
