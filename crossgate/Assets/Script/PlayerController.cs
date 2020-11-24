@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
             // CheckForEncounters();
           if(move!=Vector2.zero){
                 //Debug.Log(move!=Vector2.zero);
+                
                 StartCoroutine(CheckForEncounters());
           }
          

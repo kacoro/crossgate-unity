@@ -28,7 +28,7 @@ public class NewBattleSystem : MonoBehaviour
         // controls.GamePlay.Move.canceled  += ctx => move = Vector2.zero;
         
         controls.GamePlay.Select.performed  += ctx => HandleSelection(ctx.ReadValue<Vector2>());
-        controls.GamePlay.Ok.started += ctx => HandleActionConfirm();
+        controls.GamePlay.Ok.performed += ctx => HandleActionConfirm();
     }
     public IEnumerator SetupBattle()
     {
@@ -74,7 +74,7 @@ public class NewBattleSystem : MonoBehaviour
 
         if(state == NewBattleState.PlayerMove ){
                 HandleMovesSelection();
-            }
+         }
     }
 
      private void OnEnable() {
@@ -90,6 +90,36 @@ public class NewBattleSystem : MonoBehaviour
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
         dialogBox.EnableMoveSelector(true);
+    }
+
+    IEnumerator PerformPlayerMove(){
+        state = NewBattleState.Busy;
+        var palyerMove = playerUnit.Pet.Moves[currentMove];
+        yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {palyerMove.Base.Name}");
+
+        yield return new WaitForSeconds(1f);
+        bool isFainted = EnemyUnit.Pet.TakeDamage(palyerMove,playerUnit.Pet);
+        yield return EnemyHud.UpdateHP();
+        if(isFainted){
+            yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} Fainted");
+        }else{
+            StartCoroutine(enemyMove());
+        }
+    }
+
+    IEnumerator enemyMove(){
+          state = NewBattleState.EnemyMove;
+          var randomMove = EnemyUnit.Pet.GetRandomMove();
+            yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
+
+            yield return new WaitForSeconds(1f);
+            bool isFainted = playerUnit.Pet.TakeDamage(randomMove,EnemyUnit.Pet);
+            yield return playerHud.UpdateHP();
+            if(isFainted){
+                yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
+            }else{
+               PlayerAction();
+            }
     }
 
     void HandleActionSelection(){
@@ -119,11 +149,13 @@ public class NewBattleSystem : MonoBehaviour
             if(currentMove >1)
                currentMove -=2;
         }
-
-
         dialogBox.UpdateMovesSelection(currentMove,playerUnit.Pet.Moves[currentMove]);
+
+
     }
     void HandleActionConfirm(){
+
+       
          if(state == NewBattleState.PlayerAction){
               if(currentAction ==0){
                 //Fight
@@ -131,9 +163,10 @@ public class NewBattleSystem : MonoBehaviour
             }else if(currentAction == 1){
                 //Run
             }
-         }
-          if(state == NewBattleState.PlayerMove ){
-
+         }else if(state == NewBattleState.PlayerMove ){
+              dialogBox.EnableMoveSelector(false);
+              dialogBox.EnableDialogText(true);
+              StartCoroutine(PerformPlayerMove());
           }
          
     }
