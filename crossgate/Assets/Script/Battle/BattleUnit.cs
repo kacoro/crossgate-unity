@@ -26,6 +26,7 @@ public class BattleUnit : MonoBehaviour
        }else{
            image.sprite = Pet.Base.Sprite;
        }
+       image.color = originalColor;
        PlayEnterAnimation();
    }
 

@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public enum NewBattleState {Start,PlayerAction,PlayerMove,EnemyMove,Busy}
+public enum NewBattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy }
 
 public class NewBattleSystem : MonoBehaviour
 {
@@ -12,22 +13,25 @@ public class NewBattleSystem : MonoBehaviour
     [SerializeField] BattleHud EnemyHud;
     [SerializeField] BattleDialogBox dialogBox;
 
+    public event Action<bool> OnBattleOver;
+
     NewBattleState state;
     private Vector2 move;
     int currentAction;
     int currentMove;
     private PlayerInputActions controls;
-    private void Start()
+    public void StartBattle()
     {
         StartCoroutine(SetupBattle());
     }
-     private void Awake() {
+    private void Awake()
+    {
         controls = new PlayerInputActions();
         // controls.GamePlay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         //  controls.GamePlay.Move.performed += ctx => HandleSelection(ctx.ReadValue<Vector2>());
         // controls.GamePlay.Move.canceled  += ctx => move = Vector2.zero;
-        
-        controls.GamePlay.Select.performed  += ctx => HandleSelection(ctx.ReadValue<Vector2>());
+
+        controls.GamePlay.Select.performed += ctx => HandleSelection(ctx.ReadValue<Vector2>());
         controls.GamePlay.Ok.performed += ctx => HandleActionConfirm();
     }
     public IEnumerator SetupBattle()
@@ -39,161 +43,191 @@ public class NewBattleSystem : MonoBehaviour
 
         dialogBox.SetMoveNames(playerUnit.Pet.Moves);
 
-       // dialogBox.SetDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
+        // dialogBox.SetDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
         //    StartCoroutine(dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared."));
         yield return dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
         PlayerAction();
     }
 
-    void PlayerAction(){
+    void PlayerAction()
+    {
         state = NewBattleState.PlayerAction;
         StartCoroutine(dialogBox.TypeDialog("Choose an action"));
         dialogBox.EnableActionSelector(true);
 
     }
 
-    private void Update() {
-        // if (move != Vector2.zero){
-        //     if(state == NewBattleState.PlayerAction){
-        //     HandleActionSelection();
-        //     }
-
-        //     if(state == NewBattleState.PlayerMove ){
-        //         HandleMovesSelection();
-        //     }
-        // }
-        
-    }
-
-    void HandleSelection(Vector2 content){
+  
+    void HandleSelection(Vector2 content)
+    {
         move = content;
-        if(state == NewBattleState.PlayerAction){
+        if (state == NewBattleState.PlayerAction)
+        {
             HandleActionSelection();
         }
 
-        if(state == NewBattleState.PlayerMove ){
-                HandleMovesSelection();
-         }
+        if (state == NewBattleState.PlayerMove)
+        {
+            HandleMovesSelection();
+        }
     }
 
-     private void OnEnable() {
+    private void OnEnable()
+    {
         controls.GamePlay.Enable();
     }
 
-     private void OnDisable() {
-         controls.GamePlay.Disable();
-     }
+    private void OnDisable()
+    {
+        controls.GamePlay.Disable();
+    }
 
-    void PlayerMove(){
+    public void HandleUpdate(){
+
+    }
+
+    void PlayerMove()
+    {
         state = NewBattleState.PlayerMove;
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
         dialogBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PerformPlayerMove(){
+    IEnumerator PerformPlayerMove()
+    {
         state = NewBattleState.Busy;
-        var palyerMove = playerUnit.Pet.Moves[currentMove];
-        yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {palyerMove.Base.Name}");
+        var playerMove = playerUnit.Pet.Moves[currentMove];
+        playerMove.PP--;
+        yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {playerMove.Base.Name}");
 
         playerUnit.PlayAttackAnimation();
-         yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);
 
         EnemyUnit.PlayHitAnimation();
 
-        var damageDetails = EnemyUnit.Pet.TakeDamage(palyerMove,playerUnit.Pet);
+        var damageDetails = EnemyUnit.Pet.TakeDamage(playerMove, playerUnit.Pet);
         yield return EnemyHud.UpdateHP();
         yield return ShowDamageDetails(damageDetails);
-        if(damageDetails.Fainted){
+        if (damageDetails.Fainted)
+        {
             yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} Fainted");
             EnemyUnit.PlayFaintAnimation();
-        }else{
+
+            yield return new WaitForSeconds(2f);
+            OnBattleOver(true);
+        }
+        else
+        {
             StartCoroutine(enemyMove());
         }
     }
 
-    IEnumerator enemyMove(){
-          state = NewBattleState.EnemyMove;
-          var randomMove = EnemyUnit.Pet.GetRandomMove();
-            yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
+    IEnumerator enemyMove()
+    {
+        state = NewBattleState.EnemyMove;
+        var randomMove = EnemyUnit.Pet.GetRandomMove();
+        randomMove.PP--;
+        yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
 
-            EnemyUnit.PlayAttackAnimation();
-            yield return new WaitForSeconds(1f);
+        EnemyUnit.PlayAttackAnimation();
+        yield return new WaitForSeconds(1f);
 
-            playerUnit.PlayHitAnimation();
+        playerUnit.PlayHitAnimation();
 
-            var damageDetails = playerUnit.Pet.TakeDamage(randomMove,EnemyUnit.Pet);
-            yield return playerHud.UpdateHP();
-            yield return ShowDamageDetails(damageDetails);
-            if(damageDetails.Fainted){
-                yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
-                playerUnit.PlayFaintAnimation();
-            }else{
-               PlayerAction();
-            }
-    }
+        var damageDetails = playerUnit.Pet.TakeDamage(randomMove, EnemyUnit.Pet);
+        yield return playerHud.UpdateHP();
+        yield return ShowDamageDetails(damageDetails);
+        if (damageDetails.Fainted)
+        {
+            yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
+            playerUnit.PlayFaintAnimation();
 
-    IEnumerator ShowDamageDetails(DamageDetails damageDetails){
-        if(damageDetails.Critical >1f){
-             yield return dialogBox.TypeDialog($" A Critical hit");
+            yield return new WaitForSeconds(2f);
+            OnBattleOver(false);
         }
-        if(damageDetails.TypeEffectiveness > 1f)
-             yield return dialogBox.TypeDialog($"It's A super effective!");
-        else if(damageDetails.TypeEffectiveness <1f)
-              yield return dialogBox.TypeDialog($"It's not very effective!");
+        else
+        {
+            PlayerAction();
+        }
     }
 
-    void HandleActionSelection(){
-        if(move.y<0){
-            if(currentAction <1)
+    IEnumerator ShowDamageDetails(DamageDetails damageDetails)
+    {
+        if (damageDetails.Critical > 1f)
+        {
+            yield return dialogBox.TypeDialog($" A Critical hit");
+        }
+        if (damageDetails.TypeEffectiveness > 1f)
+            yield return dialogBox.TypeDialog($"It's A super effective!");
+        else if (damageDetails.TypeEffectiveness < 1f)
+            yield return dialogBox.TypeDialog($"It's not very effective!");
+    }
+
+    void HandleActionSelection()
+    {
+        if (move.y < 0)
+        {
+            if (currentAction < 1)
                 ++currentAction;
-        }else if(move.y>0){
-            if(currentAction >0)
+        }
+        else if (move.y > 0)
+        {
+            if (currentAction > 0)
                 --currentAction;
         }
         dialogBox.UpdateActionSelection(currentAction);
     }
-    void HandleMovesSelection(){
-       
-        if(move.x>0){
-             Debug.Log(move.x);
-            if(currentMove < playerUnit.Pet.Moves.Count -1)
+    void HandleMovesSelection()
+    {
+
+        if (move.x > 0)
+        {
+            Debug.Log(move.x);
+            if (currentMove < playerUnit.Pet.Moves.Count - 1)
                 ++currentMove;
-        }else if(move.x<0){
-             Debug.Log(move.x);
-            if(currentMove >0)
-                --currentMove;
-        }else if(move.y<0){
-            if(currentMove <  playerUnit.Pet.Moves.Count -2)
-                 currentMove +=2;
-        }else if(move.y>0){
-            if(currentMove >1)
-               currentMove -=2;
         }
-        dialogBox.UpdateMovesSelection(currentMove,playerUnit.Pet.Moves[currentMove]);
+        else if (move.x < 0)
+        {
+            Debug.Log(move.x);
+            if (currentMove > 0)
+                --currentMove;
+        }
+        else if (move.y < 0)
+        {
+            if (currentMove < playerUnit.Pet.Moves.Count - 2)
+                currentMove += 2;
+        }
+        else if (move.y > 0)
+        {
+            if (currentMove > 1)
+                currentMove -= 2;
+        }
+        dialogBox.UpdateMovesSelection(currentMove, playerUnit.Pet.Moves[currentMove]);
 
 
     }
-    void HandleActionConfirm(){
+    void HandleActionConfirm()
+    {
 
-       
-         if(state == NewBattleState.PlayerAction){
-              if(currentAction ==0){
+        if (state == NewBattleState.PlayerAction)
+        {
+            if (currentAction == 0)
+            {
                 //Fight
                 PlayerMove();
-            }else if(currentAction == 1){
+            }
+            else if (currentAction == 1)
+            {
                 //Run
             }
-         }else if(state == NewBattleState.PlayerMove ){
-              dialogBox.EnableMoveSelector(false);
-              dialogBox.EnableDialogText(true);
-              StartCoroutine(PerformPlayerMove());
-          }
-         
+        }
+        else if (state == NewBattleState.PlayerMove)
+        {
+            dialogBox.EnableMoveSelector(false);
+            dialogBox.EnableDialogText(true);
+            StartCoroutine(PerformPlayerMove());
+        }
     }
 
-  
-
-
-   
 }
