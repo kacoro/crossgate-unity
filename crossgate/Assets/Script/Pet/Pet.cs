@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Pet
 {
-    public PetBase Base { get; set; }
-    public int Level { get; set; }
+
+    [SerializeField] PetBase _base;
+    [SerializeField] int level;
+    public PetBase Base { get{
+        return _base;
+    } }
+    public int Level { get{
+        return level;
+    } }
 
     public int HP { get; set; }  //short form 
     public List<Move> Moves { get; set; }
 
-    public Pet(PetBase pBase, int pLevel)
+    public void Init()
     { //constructor
-        Base = pBase;
-        Level = pLevel;
         HP = MaxHp;
         Moves = new List<Move>();
 

@@ -20,7 +20,11 @@ public class GameController : MonoBehaviour
         state = GameState.Battle;
         battleSystem.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
-        battleSystem.StartBattle();
+
+        var playerParty = playerController.GetComponent<PetParty>();
+        var wildPet = FindObjectOfType<MapArea>().GetComponent<MapArea>().GetRandomWildPet();
+
+        battleSystem.StartBattle(playerParty,wildPet);
     }
 
     void EndBattel(bool won){

@@ -5,8 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class BattleUnit : MonoBehaviour
 {
-   [SerializeField] PetBase _base;
-   [SerializeField] int level;
+
     [SerializeField] bool isPlayerUnit;
     public Pet Pet {get;set;}
 
@@ -19,8 +18,8 @@ public class BattleUnit : MonoBehaviour
         originalColor = image.color;
     }
 
-   public void Setup(){
-       Pet = new Pet(_base,level);
+   public void Setup(Pet pet){
+        Pet = pet;
        if(isPlayerUnit){
            image.sprite = Pet.Base.Sprite;
        }else{

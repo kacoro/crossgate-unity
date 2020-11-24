@@ -20,10 +20,10 @@ public class NewBattleSystem : MonoBehaviour
     int currentAction;
     int currentMove;
     private PlayerInputActions controls;
-    public void StartBattle()
-    {
-        StartCoroutine(SetupBattle());
-    }
+ 
+    PetParty playerParty;
+    Pet wildPet;
+
     private void Awake()
     {
         controls = new PlayerInputActions();
@@ -34,11 +34,17 @@ public class NewBattleSystem : MonoBehaviour
         controls.GamePlay.Select.performed += ctx => HandleSelection(ctx.ReadValue<Vector2>());
         controls.GamePlay.Ok.performed += ctx => HandleActionConfirm();
     }
+       public void StartBattle(PetParty playerParty,Pet wildPet)
+    {
+        this.playerParty = playerParty;
+        this.wildPet = wildPet;
+        StartCoroutine(SetupBattle());
+    }
     public IEnumerator SetupBattle()
     {
-        playerUnit.Setup();
+        playerUnit.Setup(playerParty.GetHealthyPet());
         playerHud.setData(playerUnit.Pet);
-        EnemyUnit.Setup();
+        EnemyUnit.Setup(wildPet);
         EnemyHud.setData(EnemyUnit.Pet);
 
         dialogBox.SetMoveNames(playerUnit.Pet.Moves);
@@ -144,7 +150,18 @@ public class NewBattleSystem : MonoBehaviour
             playerUnit.PlayFaintAnimation();
 
             yield return new WaitForSeconds(2f);
-            OnBattleOver(false);
+
+            var nextPet = playerParty.GetHealthyPet();
+            if(nextPet != null){
+                playerUnit.Setup(nextPet);
+                playerHud.setData(nextPet);
+                dialogBox.SetMoveNames(nextPet.Moves);
+                 yield return dialogBox.TypeDialog($"Go {nextPet.Base.Name}");
+                  PlayerAction();
+            }else{
+                 OnBattleOver(false);
+            }
+           
         }
         else
         {
