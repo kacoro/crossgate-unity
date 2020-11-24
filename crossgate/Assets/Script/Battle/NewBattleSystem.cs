@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public enum NewBattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy }
+public enum NewBattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen }
 
 public class NewBattleSystem : MonoBehaviour
 {
@@ -12,15 +12,19 @@ public class NewBattleSystem : MonoBehaviour
     [SerializeField] BattleUnit EnemyUnit;
     [SerializeField] BattleHud EnemyHud;
     [SerializeField] BattleDialogBox dialogBox;
+    [SerializeField] PartyScreen partyScreen;
 
     public event Action<bool> OnBattleOver;
 
     NewBattleState state;
     private Vector2 move;
-    int currentAction;
-    int currentMove;
+    int currentAction = 0;
+    int currentMove = 0;
+
+    int currentMember;
+
     private PlayerInputActions controls;
- 
+
     PetParty playerParty;
     Pet wildPet;
 
@@ -33,8 +37,9 @@ public class NewBattleSystem : MonoBehaviour
 
         controls.GamePlay.Select.performed += ctx => HandleSelection(ctx.ReadValue<Vector2>());
         controls.GamePlay.Ok.performed += ctx => HandleActionConfirm();
+        controls.GamePlay.Cancel.performed += ctx => HandleActionCancel();
     }
-       public void StartBattle(PetParty playerParty,Pet wildPet)
+    public void StartBattle(PetParty playerParty, Pet wildPet)
     {
         this.playerParty = playerParty;
         this.wildPet = wildPet;
@@ -47,6 +52,8 @@ public class NewBattleSystem : MonoBehaviour
         EnemyUnit.Setup(wildPet);
         EnemyHud.setData(EnemyUnit.Pet);
 
+        partyScreen.Init();
+
         dialogBox.SetMoveNames(playerUnit.Pet.Moves);
 
         // dialogBox.SetDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
@@ -58,12 +65,18 @@ public class NewBattleSystem : MonoBehaviour
     void PlayerAction()
     {
         state = NewBattleState.PlayerAction;
-        StartCoroutine(dialogBox.TypeDialog("Choose an action"));
+        dialogBox.SetDialog("Choose an action");
+        // StartCoroutine(dialogBox.TypeDialog("Choose an action"));
         dialogBox.EnableActionSelector(true);
-
+    }
+    void OpenPartyScreen()
+    {
+        state = NewBattleState.PartyScreen;
+        partyScreen.SetPartyData(playerParty.Pets);
+        partyScreen.gameObject.SetActive(true);
     }
 
-  
+
     void HandleSelection(Vector2 content)
     {
         move = content;
@@ -71,10 +84,13 @@ public class NewBattleSystem : MonoBehaviour
         {
             HandleActionSelection();
         }
-
-        if (state == NewBattleState.PlayerMove)
+        else if (state == NewBattleState.PlayerMove)
         {
             HandleMovesSelection();
+        }
+        else if (state == NewBattleState.PartyScreen)
+        {
+            HandlePartyScreenSelection();
         }
     }
 
@@ -88,7 +104,8 @@ public class NewBattleSystem : MonoBehaviour
         controls.GamePlay.Disable();
     }
 
-    public void HandleUpdate(){
+    public void HandleUpdate()
+    {
 
     }
 
@@ -152,16 +169,20 @@ public class NewBattleSystem : MonoBehaviour
             yield return new WaitForSeconds(2f);
 
             var nextPet = playerParty.GetHealthyPet();
-            if(nextPet != null){
-                playerUnit.Setup(nextPet);
-                playerHud.setData(nextPet);
-                dialogBox.SetMoveNames(nextPet.Moves);
-                 yield return dialogBox.TypeDialog($"Go {nextPet.Base.Name}");
-                  PlayerAction();
-            }else{
-                 OnBattleOver(false);
+            if (nextPet != null)
+            {
+                // playerUnit.Setup(nextPet);
+                // playerHud.setData(nextPet);
+                // dialogBox.SetMoveNames(nextPet.Moves);
+                // yield return dialogBox.TypeDialog($"Go {nextPet.Base.Name}");
+                // PlayerAction();
+                OpenPartyScreen();
             }
-           
+            else
+            {
+                OnBattleOver(false);
+            }
+
         }
         else
         {
@@ -183,43 +204,30 @@ public class NewBattleSystem : MonoBehaviour
 
     void HandleActionSelection()
     {
-        if (move.y < 0)
-        {
-            if (currentAction < 1)
-                ++currentAction;
-        }
+        if (move.x > 0)
+            ++currentAction;
+        else if (move.x < 0)
+            --currentAction;
+        else if (move.y < 0)
+            currentAction += 2;
         else if (move.y > 0)
-        {
-            if (currentAction > 0)
-                --currentAction;
-        }
+            currentAction -= 2;
+
+        currentAction = Mathf.Clamp(currentAction, 0, 3);
         dialogBox.UpdateActionSelection(currentAction);
     }
     void HandleMovesSelection()
     {
-
         if (move.x > 0)
-        {
-            Debug.Log(move.x);
-            if (currentMove < playerUnit.Pet.Moves.Count - 1)
-                ++currentMove;
-        }
+            ++currentMove;
         else if (move.x < 0)
-        {
-            Debug.Log(move.x);
-            if (currentMove > 0)
-                --currentMove;
-        }
+            --currentMove;
         else if (move.y < 0)
-        {
-            if (currentMove < playerUnit.Pet.Moves.Count - 2)
-                currentMove += 2;
-        }
+            currentMove += 2;
         else if (move.y > 0)
-        {
-            if (currentMove > 1)
-                currentMove -= 2;
-        }
+            currentMove -= 2;
+
+        currentMove = Mathf.Clamp(currentMove, 0, playerUnit.Pet.Moves.Count - 1);
         dialogBox.UpdateMovesSelection(currentMove, playerUnit.Pet.Moves[currentMove]);
 
 
@@ -236,6 +244,15 @@ public class NewBattleSystem : MonoBehaviour
             }
             else if (currentAction == 1)
             {
+                //Bag
+            }
+            else if (currentAction == 2)
+            {
+                //Pet
+                OpenPartyScreen();
+            }
+            else if (currentAction == 3)
+            {
                 //Run
             }
         }
@@ -245,6 +262,71 @@ public class NewBattleSystem : MonoBehaviour
             dialogBox.EnableDialogText(true);
             StartCoroutine(PerformPlayerMove());
         }
+        else if (state == NewBattleState.PartyScreen)
+        {
+            var selectedMember = playerParty.Pets[currentMember];
+            if (selectedMember.HP <= 0)
+            {
+                partyScreen.SetMessageText("You can't send out a fainted Pet");
+                return;
+            }
+            if (selectedMember == playerUnit.Pet)
+            {
+                partyScreen.SetMessageText("You can't switch with the same Pet");
+                return;
+            }
+            partyScreen.gameObject.SetActive(false);
+            state = NewBattleState.Busy;
+            StartCoroutine(SwitchPet(selectedMember));
+        }
+    }
+
+    IEnumerator SwitchPet(Pet newPet)
+    {
+        if(playerUnit.Pet.HP > 0 ){
+            yield return dialogBox.TypeDialog($"Come back{playerUnit.Pet.Base.Name}");
+            playerUnit.PlayFaintAnimation();
+            yield return new WaitForSeconds(2f);
+        }
+        playerUnit.Setup(newPet);
+        playerHud.setData(newPet);
+        dialogBox.SetMoveNames(newPet.Moves);
+        yield return dialogBox.TypeDialog($"Go {newPet.Base.Name}");
+
+        StartCoroutine(enemyMove());
+
+    }
+
+    void HandleActionCancel()
+    {
+        if (state == NewBattleState.PlayerMove)
+        {
+            dialogBox.EnableMoveSelector(false);
+            dialogBox.EnableDialogText(true);
+            PlayerAction();
+        }
+        else if (state == NewBattleState.PartyScreen)
+        {
+
+            partyScreen.gameObject.SetActive(false);
+            PlayerAction();
+
+        }
+    }
+
+    void HandlePartyScreenSelection()
+    {
+        if (move.x > 0)
+            ++currentMember;
+        else if (move.x < 0)
+            --currentMember;
+        else if (move.y < 0)
+            currentMember += 2;
+        else if (move.y > 0)
+            currentMember -= 2;
+
+        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Pets.Count - 1);
+        partyScreen.UpdateMemberSelection(currentMember);
     }
 
 }

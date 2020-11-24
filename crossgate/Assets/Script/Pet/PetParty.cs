@@ -7,6 +7,12 @@ public class PetParty : MonoBehaviour
 {
     [SerializeField] List<Pet> pets;
 
+    public List<Pet> Pets{
+        get{
+            return pets;
+        }
+    }
+
     private void Start() {
         foreach(var pet in pets){
             pet.Init();

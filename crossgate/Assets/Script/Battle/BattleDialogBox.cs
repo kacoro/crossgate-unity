@@ -28,6 +28,10 @@ public class BattleDialogBox : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
+    public int GetActionTextsCount(){
+        return actionTexts.Count;
+    }
+
     public void EnableDialogText(bool enabled){
         dialogText.enabled = enabled;
     }
