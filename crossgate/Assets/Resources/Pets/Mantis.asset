@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304a2583ffef79f468aff4a5938d02f7, type: 3}
+  m_Name: Mantis
+  m_EditorClassIdentifier: 
+  name: Mantis
+  description: 
+  sprite: {fileID: 21300000, guid: 351e32dd0f191e445ae00ec20fff9c57, type: 3}
+  Type: 5
+  maxHp: 0
+  attack: 49
+  defense: 49
+  spAttack: 65
+  spDefense: 65
+  speed: 45
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 2dbebecf1db76564f9d2239b39ec51d1, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 0094df9096f2ca34c956c2cdba1f9407, type: 2}
+    level: 4
+  - moveBase: {fileID: 11400000, guid: 12c9539e6727ef247b5b3ec2949c2228, type: 2}
+    level: 7

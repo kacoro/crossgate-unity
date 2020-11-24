@@ -83,7 +83,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Select"",
                     ""type"": ""Button"",
                     ""id"": ""67cd35fa-4541-41e3-8e6c-9e49766efd07"",
                     ""expectedControlType"": ""Button"",
@@ -423,15 +423,59 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""cf495c6f-5742-4ac3-9eb7-97604ec0560d"",
-                    ""path"": """",
+                    ""name"": ""2D Vector"",
+                    ""id"": ""8b6bee7a-2e8c-41f0-a22c-170c19ab7748"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""New action"",
-                    ""isComposite"": false,
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ef70a0bb-5a1b-4976-98ef-7a951077cc9d"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxGamePad"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""f0880d27-65bb-44cc-8504-6ca44b7d30d1"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxGamePad"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""76b809d1-6866-4778-86e2-3adcb64f34a4"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxGamePad"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""e337797d-77f3-474a-a1fa-9309725a511d"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxGamePad"",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -459,7 +503,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_GamePlay_MouseUp = m_GamePlay.FindAction("MouseUp", throwIfNotFound: true);
         m_GamePlay_MouseDrag = m_GamePlay.FindAction("MouseDrag", throwIfNotFound: true);
         m_GamePlay_Submit = m_GamePlay.FindAction("Submit", throwIfNotFound: true);
-        m_GamePlay_Newaction = m_GamePlay.FindAction("New action", throwIfNotFound: true);
+        m_GamePlay_Select = m_GamePlay.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -517,7 +561,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_MouseUp;
     private readonly InputAction m_GamePlay_MouseDrag;
     private readonly InputAction m_GamePlay_Submit;
-    private readonly InputAction m_GamePlay_Newaction;
+    private readonly InputAction m_GamePlay_Select;
     public struct GamePlayActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -530,7 +574,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @MouseUp => m_Wrapper.m_GamePlay_MouseUp;
         public InputAction @MouseDrag => m_Wrapper.m_GamePlay_MouseDrag;
         public InputAction @Submit => m_Wrapper.m_GamePlay_Submit;
-        public InputAction @Newaction => m_Wrapper.m_GamePlay_Newaction;
+        public InputAction @Select => m_Wrapper.m_GamePlay_Select;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -564,9 +608,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Submit.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
                 @Submit.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
                 @Submit.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSubmit;
-                @Newaction.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnNewaction;
+                @Select.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSelect;
+                @Select.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSelect;
+                @Select.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnSelect;
             }
             m_Wrapper.m_GamePlayActionsCallbackInterface = instance;
             if (instance != null)
@@ -595,9 +639,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Submit.started += instance.OnSubmit;
                 @Submit.performed += instance.OnSubmit;
                 @Submit.canceled += instance.OnSubmit;
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
             }
         }
     }
@@ -630,6 +674,6 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnMouseUp(InputAction.CallbackContext context);
         void OnMouseDrag(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

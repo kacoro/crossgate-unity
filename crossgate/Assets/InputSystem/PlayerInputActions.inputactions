@@ -70,7 +70,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "New action",
+                    "name": "Select",
                     "type": "Button",
                     "id": "67cd35fa-4541-41e3-8e6c-9e49766efd07",
                     "expectedControlType": "Button",
@@ -410,15 +410,59 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "cf495c6f-5742-4ac3-9eb7-97604ec0560d",
-                    "path": "",
+                    "name": "2D Vector",
+                    "id": "8b6bee7a-2e8c-41f0-a22c-170c19ab7748",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "New action",
-                    "isComposite": false,
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "ef70a0bb-5a1b-4976-98ef-7a951077cc9d",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxGamePad",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "f0880d27-65bb-44cc-8504-6ca44b7d30d1",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxGamePad",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "76b809d1-6866-4778-86e2-3adcb64f34a4",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxGamePad",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "e337797d-77f3-474a-a1fa-9309725a511d",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxGamePad",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
