@@ -3,14 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public enum NewBattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy, PartyScreen }
+public enum NewBattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen,BattleOver }
 
 public class NewBattleSystem : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit;
-    [SerializeField] BattleHud playerHud;
-    [SerializeField] BattleUnit EnemyUnit;
-    [SerializeField] BattleHud EnemyHud;
+    [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleDialogBox dialogBox;
     [SerializeField] PartyScreen partyScreen;
 
@@ -48,23 +46,26 @@ public class NewBattleSystem : MonoBehaviour
     public IEnumerator SetupBattle()
     {
         playerUnit.Setup(playerParty.GetHealthyPet());
-        playerHud.setData(playerUnit.Pet);
-        EnemyUnit.Setup(wildPet);
-        EnemyHud.setData(EnemyUnit.Pet);
+        enemyUnit.Setup(wildPet);
 
         partyScreen.Init();
 
         dialogBox.SetMoveNames(playerUnit.Pet.Moves);
 
-        // dialogBox.SetDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
-        //    StartCoroutine(dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared."));
-        yield return dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
-        PlayerAction();
+        // dialogBox.SetDialog($"A wild {enemyUnit.Pet.Base.Name} appeared.");
+        //    StartCoroutine(dialogBox.TypeDialog($"A wild {enemyUnit.Pet.Base.Name} appeared."));
+        yield return dialogBox.TypeDialog($"A wild {enemyUnit.Pet.Base.Name} appeared.");
+        ActionSelection();
     }
 
-    void PlayerAction()
+    void BattleOver(bool won){
+        state = NewBattleState.BattleOver;
+        OnBattleOver(won);
+    }
+
+    void ActionSelection()
     {
-        state = NewBattleState.PlayerAction;
+        state = NewBattleState.ActionSelection;
         dialogBox.SetDialog("Choose an action");
         // StartCoroutine(dialogBox.TypeDialog("Choose an action"));
         dialogBox.EnableActionSelector(true);
@@ -80,11 +81,11 @@ public class NewBattleSystem : MonoBehaviour
     void HandleSelection(Vector2 content)
     {
         move = content;
-        if (state == NewBattleState.PlayerAction)
+        if (state == NewBattleState.ActionSelection)
         {
             HandleActionSelection();
         }
-        else if (state == NewBattleState.PlayerMove)
+        else if (state == NewBattleState.MoveSelection)
         {
             HandleMovesSelection();
         }
@@ -109,84 +110,69 @@ public class NewBattleSystem : MonoBehaviour
 
     }
 
-    void PlayerMove()
+    void MoveSelection()
     {
-        state = NewBattleState.PlayerMove;
+        state = NewBattleState.MoveSelection;
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
         dialogBox.EnableMoveSelector(true);
     }
 
-    IEnumerator PerformPlayerMove()
+    IEnumerator PlayerMove()
     {
-        state = NewBattleState.Busy;
+        state = NewBattleState.PerformMove;
         var playerMove = playerUnit.Pet.Moves[currentMove];
-        playerMove.PP--;
-        yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {playerMove.Base.Name}");
+        yield return RunMove(playerUnit,enemyUnit,playerMove);
 
-        playerUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
-
-        EnemyUnit.PlayHitAnimation();
-
-        var damageDetails = EnemyUnit.Pet.TakeDamage(playerMove, playerUnit.Pet);
-        yield return EnemyHud.UpdateHP();
-        yield return ShowDamageDetails(damageDetails);
-        if (damageDetails.Fainted)
-        {
-            yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} Fainted");
-            EnemyUnit.PlayFaintAnimation();
-
-            yield return new WaitForSeconds(2f);
-            OnBattleOver(true);
-        }
-        else
-        {
+        // If the battle stat was not changed by RunMove, the go to next step
+        if(state == NewBattleState.PerformMove)
             StartCoroutine(enemyMove());
-        }
     }
 
     IEnumerator enemyMove()
     {
-        state = NewBattleState.EnemyMove;
-        var randomMove = EnemyUnit.Pet.GetRandomMove();
-        randomMove.PP--;
-        yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
+        state = NewBattleState.PerformMove;
+        var randomMove = enemyUnit.Pet.GetRandomMove();
+        yield return RunMove(enemyUnit,playerUnit,randomMove);
+         // If the battle stat was not changed by RunMove, the go to next step
+        if(state == NewBattleState.PerformMove)  
+             ActionSelection();
+    }
 
-        EnemyUnit.PlayAttackAnimation();
+    void CheckForBattleOver(BattleUnit faintedUnit){
+        if(faintedUnit.IsPlayerUnit){
+             var nextPet = playerParty.GetHealthyPet();
+            if (nextPet != null)
+            {
+                OpenPartyScreen();
+            }else{
+                BattleOver(false);
+            }
+        }else{
+            BattleOver(true);
+        }
+    }
+
+    IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit,Move sourceMove){
+         sourceMove.PP--;
+        yield return dialogBox.TypeDialog($"{sourceUnit.Pet.Base.Name} use {sourceMove.Base.Name}");
+
+        sourceUnit.PlayAttackAnimation();
         yield return new WaitForSeconds(1f);
 
-        playerUnit.PlayHitAnimation();
+        targetUnit.PlayHitAnimation();
 
-        var damageDetails = playerUnit.Pet.TakeDamage(randomMove, EnemyUnit.Pet);
-        yield return playerHud.UpdateHP();
+        var damageDetails = targetUnit.Pet.TakeDamage(sourceMove, sourceUnit.Pet);
+        yield return targetUnit.Hud.UpdateHP();
         yield return ShowDamageDetails(damageDetails);
         if (damageDetails.Fainted)
         {
-            yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
-            playerUnit.PlayFaintAnimation();
+            yield return dialogBox.TypeDialog($"{targetUnit.Pet.Base.Name} Fainted");
+            targetUnit.PlayFaintAnimation();
 
             yield return new WaitForSeconds(2f);
 
-            var nextPet = playerParty.GetHealthyPet();
-            if (nextPet != null)
-            {
-                // playerUnit.Setup(nextPet);
-                // playerHud.setData(nextPet);
-                // dialogBox.SetMoveNames(nextPet.Moves);
-                // yield return dialogBox.TypeDialog($"Go {nextPet.Base.Name}");
-                // PlayerAction();
-                OpenPartyScreen();
-            }
-            else
-            {
-                OnBattleOver(false);
-            }
-
-        }
-        else
-        {
-            PlayerAction();
+            CheckForBattleOver(targetUnit);
         }
     }
 
@@ -235,12 +221,12 @@ public class NewBattleSystem : MonoBehaviour
     void HandleActionConfirm()
     {
 
-        if (state == NewBattleState.PlayerAction)
+        if (state == NewBattleState.ActionSelection)
         {
             if (currentAction == 0)
             {
                 //Fight
-                PlayerMove();
+                MoveSelection();
             }
             else if (currentAction == 1)
             {
@@ -256,11 +242,11 @@ public class NewBattleSystem : MonoBehaviour
                 //Run
             }
         }
-        else if (state == NewBattleState.PlayerMove)
+        else if (state == NewBattleState.MoveSelection)
         {
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
-            StartCoroutine(PerformPlayerMove());
+            StartCoroutine(PlayerMove());
         }
         else if (state == NewBattleState.PartyScreen)
         {
@@ -289,7 +275,6 @@ public class NewBattleSystem : MonoBehaviour
             yield return new WaitForSeconds(2f);
         }
         playerUnit.Setup(newPet);
-        playerHud.setData(newPet);
         dialogBox.SetMoveNames(newPet.Moves);
         yield return dialogBox.TypeDialog($"Go {newPet.Base.Name}");
 
@@ -299,17 +284,17 @@ public class NewBattleSystem : MonoBehaviour
 
     void HandleActionCancel()
     {
-        if (state == NewBattleState.PlayerMove)
+        if (state == NewBattleState.MoveSelection)
         {
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
-            PlayerAction();
+            ActionSelection();
         }
         else if (state == NewBattleState.PartyScreen)
         {
 
             partyScreen.gameObject.SetActive(false);
-            PlayerAction();
+            ActionSelection();
 
         }
     }
