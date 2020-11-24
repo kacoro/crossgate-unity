@@ -42,7 +42,6 @@ public class NewBattleSystem : MonoBehaviour
        // dialogBox.SetDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
         //    StartCoroutine(dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared."));
         yield return dialogBox.TypeDialog($"A wild {EnemyUnit.Pet.Base.Name} appeared.");
-        yield return new WaitForSeconds(1f);
         PlayerAction();
     }
 
@@ -96,11 +95,10 @@ public class NewBattleSystem : MonoBehaviour
         state = NewBattleState.Busy;
         var palyerMove = playerUnit.Pet.Moves[currentMove];
         yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} use {palyerMove.Base.Name}");
-
-        yield return new WaitForSeconds(1f);
-        bool isFainted = EnemyUnit.Pet.TakeDamage(palyerMove,playerUnit.Pet);
+        var damageDetails = EnemyUnit.Pet.TakeDamage(palyerMove,playerUnit.Pet);
         yield return EnemyHud.UpdateHP();
-        if(isFainted){
+        yield return ShowDamageDetails(damageDetails);
+        if(damageDetails.Fainted){
             yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} Fainted");
         }else{
             StartCoroutine(enemyMove());
@@ -111,15 +109,24 @@ public class NewBattleSystem : MonoBehaviour
           state = NewBattleState.EnemyMove;
           var randomMove = EnemyUnit.Pet.GetRandomMove();
             yield return dialogBox.TypeDialog($"{EnemyUnit.Pet.Base.Name} use {randomMove.Base.Name}");
-
-            yield return new WaitForSeconds(1f);
-            bool isFainted = playerUnit.Pet.TakeDamage(randomMove,EnemyUnit.Pet);
+            var damageDetails = playerUnit.Pet.TakeDamage(randomMove,EnemyUnit.Pet);
             yield return playerHud.UpdateHP();
-            if(isFainted){
+            yield return ShowDamageDetails(damageDetails);
+            if(damageDetails.Fainted){
                 yield return dialogBox.TypeDialog($"{playerUnit.Pet.Base.Name} Fainted");
             }else{
                PlayerAction();
             }
+    }
+
+    IEnumerator ShowDamageDetails(DamageDetails damageDetails){
+        if(damageDetails.Critical >1f){
+             yield return dialogBox.TypeDialog($" A Critical hit");
+        }
+        if(damageDetails.TypeEffectiveness > 1f)
+             yield return dialogBox.TypeDialog($"It's A super effective!");
+        else if(damageDetails.TypeEffectiveness <1f)
+              yield return dialogBox.TypeDialog($"It's not very effective!");
     }
 
     void HandleActionSelection(){

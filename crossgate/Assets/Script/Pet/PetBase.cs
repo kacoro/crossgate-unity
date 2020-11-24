@@ -12,7 +12,7 @@ public class PetBase : ScriptableObject
 
     [SerializeField] Sprite sprite;
     
-    [SerializeField] PetType Type;
+    [SerializeField] PetType type;
 
 
     //Base Stats
@@ -39,6 +39,10 @@ public class PetBase : ScriptableObject
 
     public Sprite Sprite {
         get { return sprite;}
+    }
+
+    public PetType Type {
+        get { return type;}
     }
 
     public int MaxHp {
@@ -99,6 +103,34 @@ public class LearnableMove{
     }
 }
 
-public enum PetType{ //人形系、野兽系、植物系、不死系、昆虫系、特殊系、金属系、龙系和飞行系
-    None,Humanoid, Beast, Plant, Undead, Insect, Special, Metal, Dragon,Flying
+// public enum PetType{ //人形系、野兽系、植物系、不死系、昆虫系、特殊系、金属系、龙系和飞行系
+//     None,Normal,Fire,Water,Humanoid, Beast, Plant, Undead, Insect, Special, Metal, Dragon,Flying
+// }
+
+public enum PetType{ //宠物小精灵的类型
+    None,Normal,Fire,Water,Electric, Grass, Ice,Fighting,Posison,Ground, Flying, Psychic, Bug, Rock, Ghost,Dragon
+}
+
+public class TypeChart{ //属性克制表
+    static float[][] chart = {
+
+        //                  NOR   FIR    WAT    ELE    GRA    ICE    FIG    POI
+        /*NOR*/ new float[]{1f,   1f,    1f,    1f,    1f,    1f,    1f,    1f   },
+        /*FIR*/ new float[]{1f,   0.5f,  0.5f,  1f,    2f,    2f,    1f,    1f   },
+        /*WAT*/ new float[]{1f,   2f,    0.5f,  2f,    0.5f,  1f,    1f,    1f   },
+        /*ELE*/ new float[]{1f,   1f,    2f,    0.5f,  0.5f,  2f,    1f,    1f   },
+        /*GRA*/ new float[]{1f,   0.5f,  2f,    2f,    0.5f,  1f,    1f,    0.5f },
+        /*POI*/ new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f   },
+      
+    };
+    public static float GetEffectiveness(PetType attackType,PetType defenseType){
+        if(attackType == PetType.None || defenseType == PetType.None){
+            return 1;
+        }
+
+        int row = (int)attackType -1;
+        int col = (int)defenseType -1;
+        
+        return chart[row][col];
+    }
 }

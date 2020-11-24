@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Growl
   description: 
   type: 7
-  power: 10
+  power: 20
   accuracy: 5
   pp: 6

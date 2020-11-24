@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Ember
   description: 
   type: 9
-  power: 10
-  accuracy: 20
+  power: 20
+  accuracy: 10
   pp: 3

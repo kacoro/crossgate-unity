@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Vine Whip
   description: 
   type: 3
-  power: 30
-  accuracy: 20
+  power: 20
+  accuracy: 10
   pp: 12

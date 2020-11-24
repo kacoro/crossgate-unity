@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Scratch
   description: 
   type: 1
-  power: 40
-  accuracy: 20
+  power: 20
+  accuracy: 10
   pp: 10
