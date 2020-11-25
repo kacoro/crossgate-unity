@@ -111,6 +111,14 @@ public enum PetType{ //宠物小精灵的类型
     None,Normal,Fire,Water,Electric, Grass, Ice,Fighting,Posison,Ground, Flying, Psychic, Bug, Rock, Ghost,Dragon
 }
 
+public enum Stat{
+    Attack,
+    Defense,
+    SpAttack,
+    SpDefense,
+    Speed
+}
+
 public class TypeChart{ //属性克制表
     static float[][] chart = {
 

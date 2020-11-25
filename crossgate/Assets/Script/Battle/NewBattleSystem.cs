@@ -161,11 +161,23 @@ public class NewBattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         targetUnit.PlayHitAnimation();
-
-        var damageDetails = targetUnit.Pet.TakeDamage(sourceMove, sourceUnit.Pet);
-        yield return targetUnit.Hud.UpdateHP();
-        yield return ShowDamageDetails(damageDetails);
-        if (damageDetails.Fainted)
+        
+        if(sourceMove.Base.Category == MoveCategory.Status){
+            var effects = sourceMove.Base.Effects;
+            if(effects.Boosts != null){
+                if(sourceMove.Base.Target == MoveTarget.Self){
+                    sourceUnit.Pet.AppllyBoost(effects.Boosts);
+                }else{
+                    targetUnit.Pet.AppllyBoost(effects.Boosts);
+                }
+            }
+        }else{
+            var damageDetails = targetUnit.Pet.TakeDamage(sourceMove, sourceUnit.Pet);
+            yield return targetUnit.Hud.UpdateHP();
+            yield return ShowDamageDetails(damageDetails);
+        }
+       
+        if (targetUnit.Pet.HP<=0)
         {
             yield return dialogBox.TypeDialog($"{targetUnit.Pet.Base.Name} Fainted");
             targetUnit.PlayFaintAnimation();
