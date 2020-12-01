@@ -15,6 +15,7 @@ public class MoveBase : ScriptableObject
     [SerializeField] int power;
     [SerializeField] int accuracy; //准确性
     [SerializeField] bool alwasysHits;
+    [SerializeField] int priority;
     [SerializeField] int pp;
     [SerializeField] MoveCategory category;
     [SerializeField] MoveEffects effects;
@@ -41,6 +42,10 @@ public class MoveBase : ScriptableObject
     }
      public int PP{
         get { return pp;}
+    }
+
+    public int Priority{
+        get {return priority;}
     }
 
     public MoveCategory Category{

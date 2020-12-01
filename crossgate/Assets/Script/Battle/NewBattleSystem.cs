@@ -117,6 +117,7 @@ public class NewBattleSystem : MonoBehaviour
 
     void MoveSelection()
     {
+       
         state = NewBattleState.MoveSelection;
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableDialogText(false);
@@ -129,8 +130,15 @@ public class NewBattleSystem : MonoBehaviour
             playerUnit.Pet.CurrentMove = playerUnit.Pet.Moves[currentMove];
             enemyUnit.Pet.CurrentMove = enemyUnit.Pet.GetRandomMove();
 
+            int playerMovePriority = playerUnit.Pet.CurrentMove.Base.Priority;
+            int enemyMovePriority = enemyUnit.Pet.CurrentMove.Base.Priority;
+
             //Check who goes first
-            bool playerGoesFirst = playerUnit.Pet.Speed >= enemyUnit.Pet.Speed;
+            bool playerGoesFirst = true;
+            if(enemyMovePriority > playerMovePriority)
+                playerGoesFirst = false;
+            else if(enemyMovePriority == playerMovePriority)
+                 playerGoesFirst = playerUnit.Pet.Speed >= enemyUnit.Pet.Speed;
 
             var firstUnit = (playerGoesFirst)? playerUnit:enemyUnit;
             var secondUnit = (playerGoesFirst)? enemyUnit:playerUnit;
@@ -402,6 +410,8 @@ public class NewBattleSystem : MonoBehaviour
         }
         else if (state == NewBattleState.MoveSelection)
         {
+             var _move = playerUnit.Pet.Moves[currentMove];
+             if(_move.PP == 0) return;
             dialogBox.EnableMoveSelector(false);
             dialogBox.EnableDialogText(true);
             StartCoroutine(RunTurns(BattleAction.Move));

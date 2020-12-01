@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 304a2583ffef79f468aff4a5938d02f7, type: 3}
   m_Name: Pidgey
   m_EditorClassIdentifier: 
-  name: 
+  name: Pidgey
   description: 
-  sprite: {fileID: 0}
-  type: 0
-  maxHp: 0
-  attack: 0
-  defense: 0
-  spAttack: 0
-  spDefense: 0
-  speed: 0
-  learnableMoves: []
+  sprite: {fileID: 21300000, guid: 27f9c81aee4cf6b4c99e161a77e3453c, type: 3}
+  type: 1
+  maxHp: 40
+  attack: 45
+  defense: 40
+  spAttack: 35
+  spDefense: 35
+  speed: 56
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: cc429de9bbfaa2041a393b04c794bf74, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: 0094df9096f2ca34c956c2cdba1f9407, type: 2}
+    level: 1

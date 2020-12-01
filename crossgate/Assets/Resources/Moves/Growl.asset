@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Growl
   description: 
-  type: 2
+  type: 1
   power: 20
-  accuracy: 5
+  accuracy: 100
+  alwasysHits: 0
+  priority: 0
   pp: 6
   category: 2
   effects:
@@ -24,4 +26,6 @@ MonoBehaviour:
     - stat: 0
       boost: -1
     status: 0
+    volatileStatus: 0
+  secondaries: []
   target: 0
