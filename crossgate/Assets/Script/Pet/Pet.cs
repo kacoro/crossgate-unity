@@ -18,6 +18,8 @@ public class Pet
     public int HP { get; set; }  //short form 
     public List<Move> Moves { get; set; }
 
+    public Move CurrentMove{get;set;}
+
     public Dictionary<Stat,int> Stats {get; private set;}  
     public Dictionary<Stat,int> StatBoosts {get; private set;} 
 
