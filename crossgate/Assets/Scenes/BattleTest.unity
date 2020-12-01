@@ -8615,6 +8615,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: XinAxe
       objectReference: {fileID: 0}
+    - target: {fileID: 2468250859627396825, guid: 30fefa6315092b346ac01085c24868c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8899339142278963279, guid: 30fefa6315092b346ac01085c24868c0, type: 3}
       propertyPath: m_RootOrder
       value: 7

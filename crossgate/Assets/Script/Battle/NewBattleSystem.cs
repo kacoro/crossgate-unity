@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public enum NewBattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen,BattleOver }
+public enum NewBattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver }
 
 public class NewBattleSystem : MonoBehaviour
 {
@@ -55,11 +55,13 @@ public class NewBattleSystem : MonoBehaviour
         // dialogBox.SetDialog($"A wild {enemyUnit.Pet.Base.Name} appeared.");
         //    StartCoroutine(dialogBox.TypeDialog($"A wild {enemyUnit.Pet.Base.Name} appeared."));
         yield return dialogBox.TypeDialog($"A wild {enemyUnit.Pet.Base.Name} appeared.");
-        ActionSelection();
+        ChooseFirstTrun();
     }
 
-    void BattleOver(bool won){
+    void BattleOver(bool won)
+    {
         state = NewBattleState.BattleOver;
+        playerParty.Pets.ForEach(p => p.OnBattleOver());
         OnBattleOver(won);
     }
 
@@ -122,10 +124,10 @@ public class NewBattleSystem : MonoBehaviour
     {
         state = NewBattleState.PerformMove;
         var playerMove = playerUnit.Pet.Moves[currentMove];
-        yield return RunMove(playerUnit,enemyUnit,playerMove);
+        yield return RunMove(playerUnit, enemyUnit, playerMove);
 
         // If the battle stat was not changed by RunMove, the go to next step
-        if(state == NewBattleState.PerformMove)
+        if (state == NewBattleState.PerformMove)
             StartCoroutine(enemyMove());
     }
 
@@ -133,59 +135,176 @@ public class NewBattleSystem : MonoBehaviour
     {
         state = NewBattleState.PerformMove;
         var randomMove = enemyUnit.Pet.GetRandomMove();
-        yield return RunMove(enemyUnit,playerUnit,randomMove);
-         // If the battle stat was not changed by RunMove, the go to next step
-        if(state == NewBattleState.PerformMove)  
-             ActionSelection();
+        yield return RunMove(enemyUnit, playerUnit, randomMove);
+        // If the battle stat was not changed by RunMove, the go to next step
+        if (state == NewBattleState.PerformMove)
+            ActionSelection();
     }
 
-    void CheckForBattleOver(BattleUnit faintedUnit){
-        if(faintedUnit.IsPlayerUnit){
-             var nextPet = playerParty.GetHealthyPet();
+    IEnumerator ShowStatusChanges(Pet pet)
+    {
+        while (pet.StatusChanges.Count > 0)
+        {
+            var message = pet.StatusChanges.Dequeue();
+            yield return dialogBox.TypeDialog(message);
+        }
+
+    }
+
+    void ChooseFirstTrun()
+    {
+        if (playerUnit.Pet.Speed >= enemyUnit.Pet.Speed)
+        {
+            ActionSelection();
+        }
+        else
+        {
+            StartCoroutine(enemyMove());
+        }
+    }
+
+    void CheckForBattleOver(BattleUnit faintedUnit)
+    {
+        if (faintedUnit.IsPlayerUnit)
+        {
+            var nextPet = playerParty.GetHealthyPet();
             if (nextPet != null)
             {
                 OpenPartyScreen();
-            }else{
+            }
+            else
+            {
                 BattleOver(false);
             }
-        }else{
+        }
+        else
+        {
             BattleOver(true);
         }
     }
 
-    IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit,Move sourceMove){
-         sourceMove.PP--;
+    IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move sourceMove)
+    {
+
+        bool canRunMove = sourceUnit.Pet.OnBeoreMove();
+        if(!canRunMove){
+            yield return ShowStatusChanges(sourceUnit.Pet);
+            yield return sourceUnit.Hud.UpdateHP();
+            yield break;
+        }
+        yield return ShowStatusChanges(sourceUnit.Pet);
+
+        sourceMove.PP--;
         yield return dialogBox.TypeDialog($"{sourceUnit.Pet.Base.Name} use {sourceMove.Base.Name}");
 
-        sourceUnit.PlayAttackAnimation();
-        yield return new WaitForSeconds(1f);
+        if(CheckIfMoveHits(sourceMove,sourceUnit.Pet,targetUnit.Pet)){
 
-        targetUnit.PlayHitAnimation();
-        
-        if(sourceMove.Base.Category == MoveCategory.Status){
-            var effects = sourceMove.Base.Effects;
-            if(effects.Boosts != null){
-                if(sourceMove.Base.Target == MoveTarget.Self){
-                    sourceUnit.Pet.AppllyBoost(effects.Boosts);
-                }else{
-                    targetUnit.Pet.AppllyBoost(effects.Boosts);
+            sourceUnit.PlayAttackAnimation();
+            yield return new WaitForSeconds(1f);
+
+            targetUnit.PlayHitAnimation();
+
+            if (sourceMove.Base.Category == MoveCategory.Status)
+            {
+                yield return RunMoveEffects(sourceMove.Base.Effects, sourceUnit.Pet, targetUnit.Pet,sourceMove.Base.Target);
+
+            }
+            else
+            {
+                var damageDetails = targetUnit.Pet.TakeDamage(sourceMove, sourceUnit.Pet);
+                yield return targetUnit.Hud.UpdateHP();
+                yield return ShowDamageDetails(damageDetails);
+            }
+
+            if(sourceMove.Base.Secondaries != null && sourceMove.Base.Secondaries.Count >0 && targetUnit.Pet.HP > 0 ){
+                foreach (var secondary in sourceMove.Base.Secondaries){
+                    var rnd = UnityEngine.Random.Range(1,101);
+                    if(rnd <= secondary.Chance)
+                        yield return RunMoveEffects(secondary, sourceUnit.Pet, targetUnit.Pet,secondary.Target);
                 }
             }
-        }else{
-            var damageDetails = targetUnit.Pet.TakeDamage(sourceMove, sourceUnit.Pet);
-            yield return targetUnit.Hud.UpdateHP();
-            yield return ShowDamageDetails(damageDetails);
-        }
-       
-        if (targetUnit.Pet.HP<=0)
-        {
-            yield return dialogBox.TypeDialog($"{targetUnit.Pet.Base.Name} Fainted");
-            targetUnit.PlayFaintAnimation();
 
+            if (targetUnit.Pet.HP <= 0)
+            {
+                yield return dialogBox.TypeDialog($"{targetUnit.Pet.Base.Name} Fainted");
+                targetUnit.PlayFaintAnimation();
+                yield return new WaitForSeconds(2f);
+
+                CheckForBattleOver(targetUnit);
+            }
+        }
+        else{
+            yield return dialogBox.TypeDialog($"{sourceUnit.Pet.Base.Name}'s attack missed");
+        }
+        // Statuses like burn or psin will hurt the pet after the trun
+        sourceUnit.Pet.OnAfterTurn();
+        yield return ShowStatusChanges(sourceUnit.Pet);
+        yield return sourceUnit.Hud.UpdateHP();
+         if (sourceUnit.Pet.HP <= 0)
+        {
+            yield return dialogBox.TypeDialog($"{sourceUnit.Pet.Base.Name} Fainted");
+            sourceUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
 
-            CheckForBattleOver(targetUnit);
+            CheckForBattleOver(sourceUnit);
         }
+    }
+
+    IEnumerator RunMoveEffects(MoveEffects effects, Pet source, Pet target,MoveTarget moveTarget)
+    {
+       
+        // Stat Boosting
+        if (effects.Boosts != null)
+        {
+            if (moveTarget == MoveTarget.Self)
+            {
+                source.AppllyBoost(effects.Boosts);
+            }
+            else
+            {
+                target.AppllyBoost(effects.Boosts);
+            }
+        }
+
+        //Status Condition
+        if(effects.Status != ConditionID.none){
+            target.SetStatus(effects.Status);
+        }
+
+        //Volatile Status Condition
+        if(effects.VolatileStatus != ConditionID.none){
+            target.SetVolatileStatus(effects.VolatileStatus);
+        }
+
+        yield return ShowStatusChanges(source);
+        yield return ShowStatusChanges(target);
+    }
+
+    bool CheckIfMoveHits(Move move,Pet source,Pet target){
+
+        if(move.Base.AlwayssHits) return true;
+        float moveAccuracy = move.Base.Accuracy;
+
+        int accuracy = source.StatBoosts[Stat.Accuracy];
+        int evasion = target.StatBoosts[Stat.Evasion];
+
+         var boostValues = new float[] {1f,4f /3f,5f /3f,2f,7f/3f,8f/3f,3f};
+
+         if(accuracy >0){
+             moveAccuracy *= boostValues[accuracy];
+         }else{
+             moveAccuracy /= boostValues[accuracy];
+         }
+
+        if(evasion >0){
+             moveAccuracy /= boostValues[evasion];
+         }else{
+             moveAccuracy *= boostValues[evasion];
+         }
+
+
+
+        return UnityEngine.Random.Range(1,101) <= moveAccuracy;
     }
 
     IEnumerator ShowDamageDetails(DamageDetails damageDetails)
@@ -281,7 +400,10 @@ public class NewBattleSystem : MonoBehaviour
 
     IEnumerator SwitchPet(Pet newPet)
     {
-        if(playerUnit.Pet.HP > 0 ){
+        bool currentPetFainted = true;
+        if (playerUnit.Pet.HP > 0)
+        {
+            currentPetFainted = false;
             yield return dialogBox.TypeDialog($"Come back{playerUnit.Pet.Base.Name}");
             playerUnit.PlayFaintAnimation();
             yield return new WaitForSeconds(2f);
@@ -290,7 +412,10 @@ public class NewBattleSystem : MonoBehaviour
         dialogBox.SetMoveNames(newPet.Moves);
         yield return dialogBox.TypeDialog($"Go {newPet.Base.Name}");
 
-        StartCoroutine(enemyMove());
+        if (currentPetFainted)
+            ChooseFirstTrun();
+        else
+            StartCoroutine(enemyMove());
 
     }
 

@@ -116,19 +116,35 @@ public enum Stat{
     Defense,
     SpAttack,
     SpDefense,
-    Speed
+    Speed,
+
+    //These 2 are not actual stats,they're used to boost the moveAccuryacy
+    Accuracy, //准确性
+    Evasion
 }
 
 public class TypeChart{ //属性克制表
     static float[][] chart = {
 
-        //                  NOR   FIR    WAT    ELE    GRA    ICE    FIG    POI
-        /*NOR*/ new float[]{1f,   1f,    1f,    1f,    1f,    1f,    1f,    1f   },
-        /*FIR*/ new float[]{1f,   0.5f,  0.5f,  1f,    2f,    2f,    1f,    1f   },
-        /*WAT*/ new float[]{1f,   2f,    0.5f,  2f,    0.5f,  1f,    1f,    1f   },
-        /*ELE*/ new float[]{1f,   1f,    2f,    0.5f,  0.5f,  2f,    1f,    1f   },
-        /*GRA*/ new float[]{1f,   0.5f,  2f,    2f,    0.5f,  1f,    1f,    0.5f },
-        /*POI*/ new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f   },
+        //                       NOR   FIR    WAT    ELE    GRA    ICE    FIG    POI   Gro    Fly    Psy   Bug   Rock   Gho   Dragon Drak   Ste   Fairy
+        /*Normal*/   new float[]{1f,   1f,    1f,    1f,    1f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f  },
+        /*Fire*/     new float[]{1f,   0.5f,  0.5f,  1f,    2f,    2f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Water*/    new float[]{1f,   2f,    0.5f,  2f,    0.5f,  1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Electric*/ new float[]{1f,   1f,    2f,    0.5f,  0.5f,  2f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Grass*/    new float[]{1f,   0.5f,  2f,    2f,    0.5f,  1f,    1f,    0.5f,  1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Ice*/      new float[]{1f,   0.5f,  0.5f,  1f,    25f,   0.5f,  1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Fighting*/ new float[]{1f,   0.5f,  0.5f,  1f,    25f,   0.5f,  1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Posion*/   new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Ground*/   new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Flying*/   new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Psychic*/  new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Bug*/      new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Rock*/     new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Ghost*/    new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Dragon*/   new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Drak*/     new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Steel*/    new float[]{1f,   0.5f,  0.5f,  0.5f,  1f,    2f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   },
+        /*Fairy*/    new float[]{1f,   1f,    1f,    1f,    2f,    1f,    1f,    1f,    1f,   1f,   1f,    1,    1f,    1f,   1f,    1f,    1f,    1f   }
       
     };
     public static float GetEffectiveness(PetType attackType,PetType defenseType){

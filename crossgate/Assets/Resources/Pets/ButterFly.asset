@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304a2583ffef79f468aff4a5938d02f7, type: 3}
+  m_Name: ButterFly
+  m_EditorClassIdentifier: 
+  name: ButterFly
+  description: 
+  sprite: {fileID: 21300000, guid: 1f028bfcc3dc6a645b5cfabfb648695f, type: 3}
+  type: 10
+  maxHp: 60
+  attack: 45
+  defense: 50
+  spAttack: 90
+  spDefense: 80
+  speed: 70
+  learnableMoves:
+  - moveBase: {fileID: 11400000, guid: 2dbebecf1db76564f9d2239b39ec51d1, type: 2}
+    level: 1
+  - moveBase: {fileID: 11400000, guid: f9208450cf592ee4d88da2e37fb6fee3, type: 2}
+    level: 10

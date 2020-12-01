@@ -20,6 +20,18 @@ public class Pet
 
     public Dictionary<Stat,int> Stats {get; private set;}  
     public Dictionary<Stat,int> StatBoosts {get; private set;} 
+
+    public Condition Status {get;private set;}
+    public int StatusTime{get;set;}
+
+    public Condition VolatileStatus{get;private set;}
+
+     public int VolatileStatusTime{get; set;}
+    public Queue<string> StatusChanges {get;private set;} = new Queue<string>();
+    public bool HpChanged {get;set;}
+
+    public event System.Action OnStatusChanged;
+    
     public void Init()
     { 
        
@@ -36,13 +48,9 @@ public class Pet
         CalculateStats();
         HP = MaxHp;
 
-        StatBoosts = new Dictionary<Stat, int>(){
-            {Stat.Attack,0},
-            {Stat.Defense,0},
-            {Stat.SpAttack,0},
-            {Stat.SpDefense,0},
-            {Stat.Speed,0}
-        };
+        ResetStatBoost();
+        Status = null;
+        VolatileStatus = null;
     }
 
     void CalculateStats(){
@@ -53,9 +61,21 @@ public class Pet
         Stats.Add(Stat.SpDefense,Mathf.FloorToInt((Base.SpDefense * Level) / 100f) + 5);
         Stats.Add(Stat.Speed,Mathf.FloorToInt((Base.Speed * Level) / 100f) + 5);
 
-        MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10;
+        MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10 +Level;
     }
 
+    void ResetStatBoost(){
+        StatBoosts = new Dictionary<Stat, int>(){
+            {Stat.Attack,0},
+            {Stat.Defense,0},
+            {Stat.SpAttack,0},
+            {Stat.SpDefense,0},
+            {Stat.Speed,0},
+            {Stat.Accuracy,0},
+            {Stat.Evasion,0}
+        };
+    }
+    
     int GetStat(Stat stat){
         int statVal = Stats[stat];
 
@@ -77,6 +97,13 @@ public class Pet
             var stat = statBoost.stat;
             var boost = statBoost.boost;
             StatBoosts[stat] = Mathf.Clamp( StatBoosts[stat] + boost,-6,6);
+
+            if(boost > 0){
+                StatusChanges.Enqueue($"{Base.Name}'s {stat} rose!");
+            }else{
+                StatusChanges.Enqueue($"{Base.Name}'s {stat} fell!");
+            }
+
             Debug.Log($"{stat} has been bossted to {StatBoosts[stat]}");
         }
     }
@@ -131,14 +158,45 @@ public class Pet
         float a = (2 * attacker.Level + 10) / 250f;
         float d = a * move.Base.Power * ((float)attack / defance) + 2;
         int damage = Mathf.FloorToInt(d * modifiers);
-        HP -= damage;
-        if (HP <= 0)
-        {
-            HP = 0;
-            damageDetails.Fainted = true;
-        }
-
+        // HP -= damage;
+        // if (HP <= 0)
+        // {
+        //     HP = 0;
+        //     damageDetails.Fainted = true;
+        // }
+        UpdateHP(damage);
         return damageDetails;
+    }
+
+    public void UpdateHP(int damage){
+        HP = Mathf.Clamp(HP - damage,0,MaxHp);
+        HpChanged = true;
+    }
+
+    public void SetStatus(ConditionID conditionId){
+        if(Status != null) return;
+
+        Status = ConditionsDB.Conditions[conditionId];
+        Status?.OnStart?.Invoke(this);
+        StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
+        OnStatusChanged?.Invoke();
+    }
+
+    public void CureStatus(){
+        Status = null;
+        OnStatusChanged?.Invoke();
+    }
+
+     public void SetVolatileStatus(ConditionID conditionId){ //only battle is over 
+        if(VolatileStatus != null) return;
+
+        VolatileStatus = ConditionsDB.Conditions[conditionId];
+        VolatileStatus?.OnStart?.Invoke(this);
+        StatusChanges.Enqueue($"{Base.Name} {VolatileStatus.StartMessage}");
+    }
+
+    public void CureVolatilesStatus(){
+        VolatileStatus = null;
     }
 
     public Move GetRandomMove()
@@ -146,7 +204,37 @@ public class Pet
         int r = Random.Range(0, Moves.Count);
         return Moves[r];
     }
+
+
+
+    public bool OnBeoreMove(){
+        bool canPerformMove = true;
+        if(Status?.OnBeforeMove!=null){
+            if(!Status.OnBeforeMove(this)){
+                canPerformMove = false;
+            }
+        }
+
+        if(VolatileStatus?.OnBeforeMove!=null){
+            if(!VolatileStatus.OnBeforeMove(this)){
+                canPerformMove = false;
+            }
+        }
+        return canPerformMove;
+    }
+
+    public void OnAfterTurn(){
+        Status?.OnAfterTurn?.Invoke(this);
+        VolatileStatus?.OnAfterTurn?.Invoke(this);
+    }
+
+    public void OnBattleOver(){
+        VolatileStatus = null;
+        ResetStatBoost();
+    }
 }
+
+
 
 public class DamageDetails
 {
