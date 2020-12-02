@@ -95,7 +95,7 @@ public class BattleSystem : MonoBehaviour
         bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
          enemyHUD.SetHP(enemyUnit.currentHp);
          dialogueText.text = "The attack is successfull";
-        yield return new WaitForSeconds(1f); //攻击有8帧
+        yield return new WaitForSeconds(5f/3); //攻击有8帧
          playerAnim.SetBool("isAttack",false);
         if(isDead){
             //End

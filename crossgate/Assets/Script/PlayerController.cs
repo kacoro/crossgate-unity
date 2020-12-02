@@ -28,13 +28,15 @@ public class PlayerController : MonoBehaviour
 
     private bool isPlaying; // 判断是否处于运行状态
 
+    private CharacterAnimator animator;
+
     private void Awake()
     {
         controls = new PlayerInputActions();
         controls.GamePlay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.GamePlay.Move.canceled += ctx => move = Vector2.zero;
-
-        // controls.GamePlay.Ok.started += Ok();
+        animator = GetComponent<CharacterAnimator>();
+        controls.GamePlay.Ok.started += ctx => Attack();
         isPlaying = true;
         if (instance == null)
         {
@@ -64,22 +66,37 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+
     }
 
-  
+
     public void HandleUpdate()
     {
-          Debug.Log(move);
-           moveH = move.x * moveSpeed;
-            moveV = move.y * moveSpeed;
-            rb.velocity = new Vector2(moveH, moveV);
-            Vector2 direction = new Vector2(moveH, moveV);
-            FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+
+        moveH = move.x * moveSpeed;
+        moveV = move.y * moveSpeed;
+        rb.velocity = new Vector2(moveH, moveV);
+        Vector2 direction = new Vector2(moveH, moveV);
+        animator.Direction = direction;
+        if (direction.magnitude < 0.01)
+        {
+            animator.IsMoving = false;
+        }
+        else
+        {
+            animator.IsMoving = true;
+        }
+        // animator.SetDirection(direction);
+        // FindObjectOfType<PlayerAnimation>().SetDirection(direction);
         if (move != Vector2.zero)
         {
             CheckForEncounters();
         }
+    }
+
+    public void Attack()
+    {
+        animator.IsAttack = true;
     }
 
     IEnumerator MovePlayer(Vector3 targetPos)
@@ -99,14 +116,14 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(transform.position, 0.2f, enCouterLayer) != null)
         {
-          if (UnityEngine.Random.Range(1, 1001) <= 10)
-                {
-                    rb.velocity = Vector3.zero;
-                     Vector2 direction = Vector2.zero;
-                     FindObjectOfType<PlayerAnimation>().SetDirection(direction);
-                    Debug.Log("Encountered a wild " + Time.deltaTime);
-                    OnEncountered();
-                }
+            if (UnityEngine.Random.Range(1, 1001) <= 10)
+            {
+                rb.velocity = Vector3.zero;
+                Vector2 direction = Vector2.zero;
+                FindObjectOfType<PlayerAnimation>().SetDirection(direction);
+                Debug.Log("Encountered a wild " + Time.deltaTime);
+                OnEncountered();
+            }
         }
 
     }

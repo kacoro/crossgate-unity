@@ -10,11 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a08b598d58fa3e24b96a03c46277e5bd, type: 3}
-  m_Name: Tackle
+  m_Name: QuickAttack
   m_EditorClassIdentifier: 
-  name: Tackle
+  name: QuickAttack
   description: 
   type: 4
-  power: 20
-  accuracy: 10
+  power: 40
+  accuracy: 100
+  alwasysHits: 0
+  priority: 1
   pp: 20
+  category: 0
+  effects:
+    boosts: []
+    status: 0
+    volatileStatus: 0
+  secondaries: []
+  target: 0
