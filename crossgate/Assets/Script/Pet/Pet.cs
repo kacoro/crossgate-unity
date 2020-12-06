@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Pet
+public class Pet 
 {
 
     [SerializeField] PetBase _base;
-    [SerializeField] int level;
+    [SerializeField] int level = 1;
     public PetBase Base { get{
         return _base;
     } }
@@ -34,7 +34,9 @@ public class Pet
     public bool HpChanged {get;set;}
 
     public event System.Action OnStatusChanged;
-    
+
+   
+  
     public void Init()
     { 
        
@@ -54,6 +56,7 @@ public class Pet
         ResetStatBoost();
         Status = null;
         VolatileStatus = null;
+       
     }
 
     void CalculateStats(){
@@ -78,6 +81,8 @@ public class Pet
             {Stat.Evasion,0}
         };
     }
+
+ 
     
     int GetStat(Stat stat){
         int statVal = Stats[stat];
@@ -94,6 +99,8 @@ public class Pet
 
         return statVal;
     }
+
+
 
     public void AppllyBoost(List<StatBoost> statBoosts){
         foreach (var statBoost in statBoosts){
@@ -234,6 +241,9 @@ public class Pet
     }
 
     public void OnBattleOver(){
+        if(HP<=0){
+            HP = 1;
+        }
         VolatileStatus = null;
         ResetStatBoost();
     }

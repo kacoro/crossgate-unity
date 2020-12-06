@@ -14,7 +14,9 @@ public class PetBase : ScriptableObject
     
     [SerializeField] PetType type;
 
+    [SerializeField]  FramOffsets framOffsets; 
 
+    [SerializeField]  string framsPath; 
     //Base Stats
     [SerializeField] int maxHp;
     [SerializeField] int attack;
@@ -68,6 +70,14 @@ public class PetBase : ScriptableObject
     public List<LearnableMove> LearnableMoves{
         get { return learnableMoves;}
     }
+
+    public string FramsPath{
+        get {return framsPath;}
+    }
+
+    public FramOffsets FramOffsets{
+        get { return framOffsets;}
+    }
 }
 
 // 角色 Character 
@@ -88,6 +98,43 @@ public class PetBase : ScriptableObject
 // 安全 safety 
 // 经验点数 Experience Point 
 // 升级 Level Up
+
+
+[System.Serializable]
+public class FramOffsets{
+    [SerializeField] Vector2Int attack;
+    [SerializeField] Vector2Int run;
+    [SerializeField] Vector2Int faint;
+    [SerializeField] Vector2Int hurt;
+    [SerializeField] Vector2Int defance;
+    [SerializeField] Vector2Int skill;
+    [SerializeField] Vector2Int idle;
+    [SerializeField] Vector2Int walk;
+    public Vector2Int Attack{
+        get {return attack;}
+    }
+    public Vector2Int Run{
+        get {return run;}
+    }
+    public Vector2Int Faint{
+        get {return faint;}
+    }
+    public Vector2Int Hurt{
+        get {return hurt;}
+    }
+    public Vector2Int Defance{
+        get {return defance;}
+    }
+    public Vector2Int Skill{
+        get {return skill;}
+    }
+    public Vector2Int Idle{
+        get {return idle;}
+    }
+    public Vector2Int Walk{
+        get {return walk;}
+    }
+}
 
 [System.Serializable]
 public class LearnableMove{

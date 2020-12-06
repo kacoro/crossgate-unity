@@ -10,7 +10,7 @@ public class Exit : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player") {
-            PlayerController.instance.scenePassword = newScenePassword;
+            PlayerController.Instance.scenePassword = newScenePassword;
            
             //SceneManager.LoadScene(sceneName);
 

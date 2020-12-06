@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
        position.x = data.postion[0];
        position.y = data.postion[1];
        position.z = data.postion[2];
-
        transform.position = position;
    }
 }

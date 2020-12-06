@@ -6,9 +6,9 @@ public class Entrance : MonoBehaviour
 {
    public string entrancePassword;
    private void Start() {
-       if(PlayerController.instance){
-        if(PlayerController.instance.scenePassword == entrancePassword){
-            PlayerController.instance.transform.position = transform.position;
+       if(PlayerController.Instance){
+        if(PlayerController.Instance.scenePassword == entrancePassword){
+            PlayerController.Instance.transform.position = transform.position;
             Debug.Log("Enter!");
         }else{
             Debug.Log("Wrong!");

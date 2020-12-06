@@ -405,7 +405,10 @@ public class NewBattleSystem : MonoBehaviour
             }
             else if (currentAction == 3)
             {
+                state = NewBattleState.BattleOver;
+                BattleOver(false);
                 //Run
+
             }
         }
         else if (state == NewBattleState.MoveSelection)

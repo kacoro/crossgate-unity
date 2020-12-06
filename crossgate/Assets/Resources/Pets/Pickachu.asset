@@ -16,6 +16,16 @@ MonoBehaviour:
   description: 
   sprite: {fileID: 0}
   type: 4
+  framOffsets:
+    Attack: 0
+    run: 0
+    faint: 0
+    hurt: 0
+    defance: 0
+    skill: 0
+    idle: 0
+    walk: 0
+  framsPath: 
   maxHp: 0
   attack: 0
   defense: 0

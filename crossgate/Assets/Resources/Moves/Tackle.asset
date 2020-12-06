@@ -16,5 +16,14 @@ MonoBehaviour:
   description: 
   type: 4
   power: 20
-  accuracy: 10
+  accuracy: 100
+  alwasysHits: 0
+  priority: 0
   pp: 20
+  category: 0
+  effects:
+    boosts: []
+    status: 0
+    volatileStatus: 0
+  secondaries: []
+  target: 0

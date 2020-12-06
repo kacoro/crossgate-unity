@@ -42,7 +42,7 @@ public class CharacterAnimator : MonoBehaviour
 
     int lastDireaction;
 
-    private SpriteAnimator wasPrevAnim =null;
+    
 
     private void Awake()
     {
@@ -52,24 +52,33 @@ public class CharacterAnimator : MonoBehaviour
     {
         lastDireaction = 6;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        int count = frames.Count;
+        int offset = 0;
+        int defaultPer = 64;
+        int per = 47;
         // nw 39 
         for (int i = 0; i < 8; i++)
         {
-            var index = i * 47;
-            AttackDirections.Add(new SpriteAnimator(frames.GetRange(index + 0, 8), spriteRenderer,0.16f,false));
-            runDirections.Add(new SpriteAnimator(frames.GetRange(index + 8, 6), spriteRenderer));
-            helloDirections.Add(new SpriteAnimator(frames.GetRange(index + 14, 2), spriteRenderer));
-            faintDirections.Add(new SpriteAnimator(frames.GetRange(index + 16, 6), spriteRenderer));
-            hurtDirections.Add(new SpriteAnimator(frames.GetRange(index + 22, 2), spriteRenderer));
-            defanceDirections.Add(new SpriteAnimator(frames.GetRange(index + 24, 1), spriteRenderer));
-            cryDirections.Add(new SpriteAnimator(frames.GetRange(index + 25, 2), spriteRenderer));
-            skillDirections.Add(new SpriteAnimator(frames.GetRange(index + 27, 3), spriteRenderer,0.16f,false));
-            angryDirections.Add(new SpriteAnimator(frames.GetRange(index + 30, 2), spriteRenderer));
-            sitDirections.Add(new SpriteAnimator(frames.GetRange(index + 32, 1), spriteRenderer));
-            idleDirections.Add(new SpriteAnimator(frames.GetRange(index + 33, 4), spriteRenderer, 1.394f / 4));
-            nodDirections.Add(new SpriteAnimator(frames.GetRange(index + 37, 2), spriteRenderer));
-            walkDirections.Add(new SpriteAnimator(frames.GetRange(index + 39, 6), spriteRenderer));
-            victoryDirections.Add(new SpriteAnimator(frames.GetRange(index + 45, 2), spriteRenderer));
+            if(count ==384){
+                offset =1;
+                per = 48;
+            }
+            var index = i * per ;
+            AttackDirections.Add(new SpriteAnimator(frames.GetRange(index + 0, 8+offset), spriteRenderer,0.16f,false));
+            
+            runDirections.Add(new SpriteAnimator(frames.GetRange(index + 8+offset, 6), spriteRenderer));
+            helloDirections.Add(new SpriteAnimator(frames.GetRange(index + 14+offset , 2), spriteRenderer));
+            faintDirections.Add(new SpriteAnimator(frames.GetRange(index + 16+offset, 6), spriteRenderer));
+            hurtDirections.Add(new SpriteAnimator(frames.GetRange(index + 22+offset, 2), spriteRenderer));
+            defanceDirections.Add(new SpriteAnimator(frames.GetRange(index + 24+offset, 1), spriteRenderer));
+            cryDirections.Add(new SpriteAnimator(frames.GetRange(index + 25+offset, 2), spriteRenderer));
+            skillDirections.Add(new SpriteAnimator(frames.GetRange(index + 27+offset, 3), spriteRenderer,0.16f,false));
+            angryDirections.Add(new SpriteAnimator(frames.GetRange(index + 30+offset, 2), spriteRenderer));
+            sitDirections.Add(new SpriteAnimator(frames.GetRange(index + 32+offset, 1), spriteRenderer));
+            idleDirections.Add(new SpriteAnimator(frames.GetRange(index + 33+offset, 4), spriteRenderer, 1.394f / 4));
+            nodDirections.Add(new SpriteAnimator(frames.GetRange(index + 37+offset, 2), spriteRenderer));
+            walkDirections.Add(new SpriteAnimator(frames.GetRange(index + 39+offset, 6), spriteRenderer));
+            victoryDirections.Add(new SpriteAnimator(frames.GetRange(index + 45+offset, 2), spriteRenderer));
         }
 
         // spriteRenderer.sprite = frames.GetRange(368,6)[0];
@@ -80,21 +89,22 @@ public class CharacterAnimator : MonoBehaviour
     {
         var prevAnim = currentAnim;
         SetDirection();
-        if(IsMoving){
-           currentAnim = walkDirections[lastDireaction];
-        }else if(IsSkill){
+        if(IsSkill){
             currentAnim = skillDirections[lastDireaction];
-        }else if(IsRunning){
-            currentAnim = runDirections[lastDireaction];
         }else if(IsAttack){
             currentAnim = AttackDirections[lastDireaction];
+        }else if(IsRunning){
+            currentAnim = runDirections[lastDireaction];
+        }else if(IsMoving){
+           currentAnim = walkDirections[lastDireaction];
         }else{
             currentAnim = idleDirections[lastDireaction];
         }
         if (prevAnim != currentAnim )
             currentAnim.Start();
-       
+        
         currentAnim.HandleUpdate();
+      
     }
 
     public int LastDireaction{
@@ -108,15 +118,14 @@ public class CharacterAnimator : MonoBehaviour
 
     public void SetDirection()
     {
-       
         if (Direction.magnitude < 0.01) //MARKER character is static. 
         {
-            // IsMoving = false;
+             IsMoving = false;
             // directionArray = idleDirections;
         }
         else
         {
-            // IsMoving = true;
+             IsMoving = true;
             // directionArray = walkDirections;
             lastDireaction = DirectionToIndex();
         }

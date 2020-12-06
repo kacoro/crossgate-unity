@@ -22,4 +22,13 @@ public class PetParty : MonoBehaviour
     public Pet GetHealthyPet(){
         return pets.Where(x => x.HP >0).FirstOrDefault();
     }
+
+    public void HealthyAllFaintPetsToOne(){
+        pets.Where(x => {
+            if(x.HP <=0){
+                x.UpdateHP(-1);
+            }
+            return true;
+        });
+    }
 }
