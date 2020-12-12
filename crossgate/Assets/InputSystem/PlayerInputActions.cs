@@ -51,7 +51,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""MouseDwon"",
+                    ""name"": ""MouseDown"",
                     ""type"": ""Button"",
                     ""id"": ""9e6adf8b-33df-4bdf-9132-b9183c8c1892"",
                     ""expectedControlType"": ""Button"",
@@ -385,7 +385,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""MouseDwon"",
+                    ""action"": ""MouseDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -499,7 +499,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_GamePlay_Ok = m_GamePlay.FindAction("Ok", throwIfNotFound: true);
         m_GamePlay_Cancel = m_GamePlay.FindAction("Cancel", throwIfNotFound: true);
         m_GamePlay_Start = m_GamePlay.FindAction("Start", throwIfNotFound: true);
-        m_GamePlay_MouseDwon = m_GamePlay.FindAction("MouseDwon", throwIfNotFound: true);
+        m_GamePlay_MouseDown = m_GamePlay.FindAction("MouseDown", throwIfNotFound: true);
         m_GamePlay_MouseUp = m_GamePlay.FindAction("MouseUp", throwIfNotFound: true);
         m_GamePlay_MouseDrag = m_GamePlay.FindAction("MouseDrag", throwIfNotFound: true);
         m_GamePlay_Submit = m_GamePlay.FindAction("Submit", throwIfNotFound: true);
@@ -557,7 +557,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_GamePlay_Ok;
     private readonly InputAction m_GamePlay_Cancel;
     private readonly InputAction m_GamePlay_Start;
-    private readonly InputAction m_GamePlay_MouseDwon;
+    private readonly InputAction m_GamePlay_MouseDown;
     private readonly InputAction m_GamePlay_MouseUp;
     private readonly InputAction m_GamePlay_MouseDrag;
     private readonly InputAction m_GamePlay_Submit;
@@ -570,7 +570,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @Ok => m_Wrapper.m_GamePlay_Ok;
         public InputAction @Cancel => m_Wrapper.m_GamePlay_Cancel;
         public InputAction @Start => m_Wrapper.m_GamePlay_Start;
-        public InputAction @MouseDwon => m_Wrapper.m_GamePlay_MouseDwon;
+        public InputAction @MouseDown => m_Wrapper.m_GamePlay_MouseDown;
         public InputAction @MouseUp => m_Wrapper.m_GamePlay_MouseUp;
         public InputAction @MouseDrag => m_Wrapper.m_GamePlay_MouseDrag;
         public InputAction @Submit => m_Wrapper.m_GamePlay_Submit;
@@ -596,9 +596,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Start.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStart;
                 @Start.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStart;
                 @Start.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnStart;
-                @MouseDwon.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDwon;
-                @MouseDwon.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDwon;
-                @MouseDwon.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDwon;
+                @MouseDown.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDown;
+                @MouseDown.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDown;
+                @MouseDown.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseDown;
                 @MouseUp.started -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseUp;
                 @MouseUp.performed -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseUp;
                 @MouseUp.canceled -= m_Wrapper.m_GamePlayActionsCallbackInterface.OnMouseUp;
@@ -627,9 +627,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Start.started += instance.OnStart;
                 @Start.performed += instance.OnStart;
                 @Start.canceled += instance.OnStart;
-                @MouseDwon.started += instance.OnMouseDwon;
-                @MouseDwon.performed += instance.OnMouseDwon;
-                @MouseDwon.canceled += instance.OnMouseDwon;
+                @MouseDown.started += instance.OnMouseDown;
+                @MouseDown.performed += instance.OnMouseDown;
+                @MouseDown.canceled += instance.OnMouseDown;
                 @MouseUp.started += instance.OnMouseUp;
                 @MouseUp.performed += instance.OnMouseUp;
                 @MouseUp.canceled += instance.OnMouseUp;
@@ -670,7 +670,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnOk(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnStart(InputAction.CallbackContext context);
-        void OnMouseDwon(InputAction.CallbackContext context);
+        void OnMouseDown(InputAction.CallbackContext context);
         void OnMouseUp(InputAction.CallbackContext context);
         void OnMouseDrag(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);

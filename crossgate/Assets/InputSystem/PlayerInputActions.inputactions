@@ -38,7 +38,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "MouseDwon",
+                    "name": "MouseDown",
                     "type": "Button",
                     "id": "9e6adf8b-33df-4bdf-9132-b9183c8c1892",
                     "expectedControlType": "Button",
@@ -372,7 +372,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "MouseDwon",
+                    "action": "MouseDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

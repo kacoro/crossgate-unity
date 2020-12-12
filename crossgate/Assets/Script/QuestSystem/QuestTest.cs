@@ -8,6 +8,7 @@ public class QuestTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         CollectionObjective qb = new CollectionObjective("Gather",10,item,"Gather 10 meat!",false);
         Debug.Log(qb.ToString());
         qb.UpdateCurrentAmount(10);

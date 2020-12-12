@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPause = false;
     public GameObject PauseMenuUI;
+    public GameObject MenuUI;
+    public GameObject BagUI;
  
     private PlayerInputActions controls;
 
@@ -26,8 +29,12 @@ public class PauseMenu : MonoBehaviour
         GameIsPause = false;
     }
 
+    public void OpenBag(){
+        MenuUI.SetActive(false);
+        BagUI.SetActive(true);
+    }
+
     public void Pause(){
-       
         if(GameIsPause) {
             Resume(); 
             return ;

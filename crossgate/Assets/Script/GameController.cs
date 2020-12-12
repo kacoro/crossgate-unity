@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
 
     private void Start() {
        
+     
             PlayerController.Instance.OnEncountered += StartBattle;
             battleSystem.OnBattleOver += EndBattel;
         
