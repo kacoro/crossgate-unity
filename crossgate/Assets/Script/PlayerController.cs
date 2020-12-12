@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         controls = new PlayerInputActions();
         controls.GamePlay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.GamePlay.Move.canceled += ctx => move = Vector2.zero;
-        controls.GamePlay.MouseDown.started += ctx => MouseDown();
+        // controls.GamePlay.MouseDown.started += ctx => MouseDown();
         animator = GetComponent<CharacterAnimator>();
         // controls.GamePlay.Ok.started += ctx => StartCoroutine(Attack());
         isPlaying = true;
