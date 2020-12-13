@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 // 缓存池模块
 // 1.Dictionary List
 // 2. GameObje 和 Resources
@@ -52,22 +52,19 @@ public class PoolMgr : BaseManager<PoolMgr>
     public Dictionary<string,PoolData> poolDic = new Dictionary<string,PoolData>();
     private GameObject poolObj;
 
-    public GameObject GetObj(string name){
-        GameObject obj = null;
-
+    public void GetObj(string name,UnityAction<GameObject> callback){
         if(poolDic.ContainsKey(name) && poolDic[name].poolList.Count > 0){
-           
-            obj = poolDic[name].GetObj();
+             //拖过委托返回给外部，让外部进行使用
+             callback(poolDic[name].GetObj());
         }else{
-           
-            obj = GameObject.Instantiate(Resources.Load<GameObject>(name));
-            obj.name = name;
+            //缓存池中没有该物体，我们去目录中加载
+            //外面传一个预设体的路径和名字，我内部就去加载它
+            ResMgr.GetInstance().LoadAsync<GameObject>(name,(o)=> {
+                o.name = name;
+                callback(o);
+            });
         }
-        // //激活
-        // obj.SetActive(true);
-        // //断开了缓存池物体与poolObj的父子关系
-        // obj.transform.parent = null;
-        return obj;
+     
     }
 
     public void PushObj(string name,GameObject obj){

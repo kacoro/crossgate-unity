@@ -5,9 +5,11 @@ using UnityEngine.InputSystem;
 public class PoolTest : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
-    {
-        
+
+    private PlayerInputActions controller;
+     private void Awake() {
+        controller = new PlayerInputActions();
+        controller.GamePlay.Start.performed += ctx => OnStart();
     }
 
     // Update is called once per framevoid FixedUpdate()
@@ -18,19 +20,25 @@ public class PoolTest : MonoBehaviour
 
          if (gamepad.xButton.wasPressedThisFrame)
         {
-            PoolMgr.GetInstatnce().GetObj("Test/Cube");
+            PoolMgr.GetInstance().GetObj("Test/Cube",(obj) =>{});
         }
         if (gamepad.aButton.wasPressedThisFrame)
         {
-             PoolMgr.GetInstatnce().GetObj("Test/Sphere");
+             PoolMgr.GetInstance().GetObj("Test/Sphere",(obj) =>{});
         }
 
         Vector2 move = gamepad.leftStick.ReadValue();
         
     }
     
+     private void OnEnable() {
+        controller.Enable();
+    }
+    private void OnDisable() {
+        controller.Disable();
+    }
 
-     public void Fire(InputAction.CallbackContext context)
+     public void OnStart()
     {
         Debug.Log("Fire!");
     }
