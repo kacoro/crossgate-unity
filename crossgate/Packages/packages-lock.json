@@ -117,7 +117,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.inputsystem": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
