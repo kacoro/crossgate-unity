@@ -6,29 +6,67 @@ using UnityEngine;
 // 1.Dictionary List
 // 2. GameObje 和 Resources
 // 相对占用内存 减少GC Cpu
+
+
+
+public class PoolData{
+    public GameObject fatherObj;
+    public List<GameObject> poolList;
+
+    public PoolData(GameObject obj,GameObject poolObj){
+        fatherObj = new GameObject(obj.name);
+        fatherObj.transform.parent = poolObj.transform;
+
+        poolList = new List<GameObject>(){};
+        PushObj(obj);
+    }
+     public void PushObj(GameObject obj)
+    {
+        //存起来
+        poolList.Add(obj);
+        //设置父对象
+        obj.transform.parent = fatherObj.transform;
+        //失活，让其隐藏
+        obj.SetActive(false);
+    }
+     //向抽屉中取东西
+    public GameObject GetObj() {
+        GameObject obj = null;
+        //取出第一个
+        obj = poolList[0];
+        poolList.RemoveAt(0);
+        //激活，让其展示
+        obj.SetActive(true);
+        //断开父子关系
+        obj.transform.parent = null;
+ 
+        return obj;
+    }
+
+}
+
 public class PoolMgr : BaseManager<PoolMgr>
 {
     
     //缓存池容器
-    public Dictionary<string,List<GameObject>> poolDic = new Dictionary<string,List<GameObject>>();
+    public Dictionary<string,PoolData> poolDic = new Dictionary<string,PoolData>();
     private GameObject poolObj;
 
     public GameObject GetObj(string name){
         GameObject obj = null;
 
-        if(poolDic.ContainsKey(name) && poolDic[name].Count > 0){
-            Debug.Log(name);
-            obj = poolDic[name][0];
-            poolDic[name].RemoveAt(0);
+        if(poolDic.ContainsKey(name) && poolDic[name].poolList.Count > 0){
+           
+            obj = poolDic[name].GetObj();
         }else{
-             Debug.Log("null");
+           
             obj = GameObject.Instantiate(Resources.Load<GameObject>(name));
             obj.name = name;
         }
-        //激活
-        obj.SetActive(true);
-        //断开了缓存池物体与poolObj的父子关系
-        obj.transform.parent = null;
+        // //激活
+        // obj.SetActive(true);
+        // //断开了缓存池物体与poolObj的父子关系
+        // obj.transform.parent = null;
         return obj;
     }
 
@@ -37,14 +75,11 @@ public class PoolMgr : BaseManager<PoolMgr>
         {
             poolObj = new GameObject("Pool");
         }
-        //实现所有申请的对象都放在Pool这个空物体下面，当某个对象物体被激活才会回到主目录下。
-        obj.transform.parent = poolObj.transform;
-        //失活
-        obj.SetActive(false);
+     
         if(poolDic.ContainsKey(name)){ //有抽屉 直接替换
-            poolDic[name].Add(obj);
+            poolDic[name].PushObj(obj);
         }else{ //没有抽屉 添加一个抽屉
-            poolDic.Add(name,new List<GameObject>(){obj});
+            poolDic.Add(name,new PoolData(obj,poolObj));
         }
     }
 
